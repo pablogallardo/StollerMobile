@@ -55,4 +55,22 @@ public class Consultas {
         }
         return reset;
     }
+
+    public ResultSet getStock(String cliente, String mes, String año){
+        Statement stmt;
+        ResultSet reset;
+        try {
+            stmt = connection.createStatement();
+            String query = "select * from DetalleStock ds join Item i" +
+                    " on ds.iditem = i.iditem join Cliente c on c.cliente=ds.cliente" +
+                    " where c.razonsocial = '" + cliente + "' AND " +
+                    "ds.año = '" + año + "' AND ds.mes = '" + mes + "'";
+            reset = stmt.executeQuery(query);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+        return reset;
+    }
 }

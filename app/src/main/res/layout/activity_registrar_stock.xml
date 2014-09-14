@@ -89,7 +89,15 @@
         <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/listView" />
+            android:id="@+id/stocklv"
+            android:layout_weight=".70" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:id="@+id/okbtn" />
 
     </LinearLayout>
+
 </FrameLayout>
