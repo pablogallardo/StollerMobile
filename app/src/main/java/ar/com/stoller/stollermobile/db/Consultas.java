@@ -56,7 +56,7 @@ public class Consultas {
         return reset;
     }
 
-    public ResultSet getStock(String cliente, String mes, String año){
+    public ResultSet getStock(String cliente, int mes, int año){
         Statement stmt;
         ResultSet reset;
         try {
@@ -72,5 +72,26 @@ public class Consultas {
             return null;
         }
         return reset;
+    }
+
+    public ResultSet getProductos(){
+        Statement stmt;
+        ResultSet reset;
+        try {
+            stmt = connection.createStatement();
+            String query = "Select * from item";
+            reset = stmt.executeQuery(query);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+        return reset;
+    }
+
+    public boolean eliminarStockProducto(String producto, int mes, int año){
+        String stm = "delete from DetalleStock where ";
+        //TODO
+        return false;
     }
 }

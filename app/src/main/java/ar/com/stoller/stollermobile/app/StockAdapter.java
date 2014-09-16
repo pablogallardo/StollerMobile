@@ -48,7 +48,7 @@ public class StockAdapter extends BaseAdapter implements OnClickListener{
         if (convertView == null) {
             //inflater = (LayoutInflater) context
             //        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.stockview, null);
+            convertView = inflater.inflate(R.layout.stockview, parent, false);
         }
         TextView producto = (TextView)convertView.findViewById(R.id.productotv);
         TextView cantidad = (TextView)convertView.findViewById(R.id.cantidadstocktv);

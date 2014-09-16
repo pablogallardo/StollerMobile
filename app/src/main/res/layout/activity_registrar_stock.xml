@@ -3,7 +3,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ar.com.stoller.stollermobile.Login"
+    tools:context=".RegistrarStock"
     tools:ignore="MergeRootFrame" >
 
     <LinearLayout
@@ -85,9 +85,20 @@
             android:text="@string/add"
             android:id="@+id/addbtn"
             android:singleLine="false" />
+        <RelativeLayout
+            android:id="@+id/loadingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center" >
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true" />
+        </RelativeLayout>
 
         <ListView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/stocklv"
             android:layout_weight=".70" />

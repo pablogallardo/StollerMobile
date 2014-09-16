@@ -13,12 +13,12 @@ public class StockManager {
 
     private ArrayList<String[]> stock;
     private String cliente;
-    private String mes;
-    private String año;
+    private int mes;
+    private int año;
     private Consultas consulta;
     private ResultSet reset;
 
-    public StockManager(String cliente, String mes, String año){
+    public StockManager(String cliente, int mes, int año){
         this.cliente = cliente;
         this.mes = mes;
         this.año = año;

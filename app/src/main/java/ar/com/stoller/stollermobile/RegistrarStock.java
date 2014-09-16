@@ -1,5 +1,7 @@
 package ar.com.stoller.stollermobile;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -28,6 +31,7 @@ public class RegistrarStock extends ActionBarActivity {
     private Button add;
     private ListView stocklv;
     private StockManager sm;
+    private String cliente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +41,18 @@ public class RegistrarStock extends ActionBarActivity {
         month = (Spinner)findViewById(R.id.monthspin);
         add = (Button)findViewById(R.id.addbtn);
         stocklv = (ListView)findViewById(R.id.stocklv);
+        Bundle bundle = getIntent().getExtras();
+        if(bundle.getString("clienteseleccionado")!= null)
+        {
 
+            cliente = bundle.getString("clienteseleccionado");
+        }
+        setTitle(cliente);
+        dateItemChanged();
         fillMonths();
         fillYears();
-        new StockCliente().execute("hola");
+        new StockCliente().execute(cliente);
+        stockLongClick();
         addClick();
     }
 
@@ -94,12 +106,74 @@ public class RegistrarStock extends ActionBarActivity {
         });
     }
 
+    private void dateItemChanged(){
+        year.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                new StockCliente().execute(cliente);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                new StockCliente().execute(cliente);
+            }
+        });
+
+        month.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                new StockCliente().execute(cliente);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                new StockCliente().execute(cliente);
+            }
+        });
+
+
+    }
+
+    private void stockLongClick(){
+        stocklv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                dialogRemove();
+                return true;
+            }
+        });
+    }
+
+    private void dialogRemove(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Alerta");
+        alertDialogBuilder
+                .setMessage("¿Realmente desea remover este item?")
+                .setCancelable(false)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
 
 
     private class StockCliente extends AsyncTask<String, Void, ArrayList<String[]>> {
         @Override
         protected ArrayList<String[]> doInBackground(String... params) {
-            sm = new StockManager("ROJO ALDO HUGO", "8","2014");
+            sm = new StockManager(params[0], month.getSelectedItemPosition() +1,
+                    Integer.parseInt(year.getSelectedItem().toString()));
             try {
                 return sm.getStock();
             } catch (SQLException e) {
@@ -110,6 +184,7 @@ public class RegistrarStock extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(ArrayList<String[]> list) {
+            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             StockAdapter sa = new StockAdapter(getApplicationContext(), list);
             stocklv.setAdapter(sa);
         }
