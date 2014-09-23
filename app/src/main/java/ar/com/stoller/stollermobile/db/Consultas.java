@@ -34,7 +34,6 @@ public class Consultas {
 				return null;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -49,7 +48,6 @@ public class Consultas {
             reset = stmt.executeQuery("select * from cliente c join usuario u"
                     + " on c.vendedor = u.orareferencia where u.usuario = '" + vendedor + "'");
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -67,7 +65,6 @@ public class Consultas {
                     "ds.año = '" + año + "' AND ds.mes = '" + mes + "'";
             reset = stmt.executeQuery(query);
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -82,7 +79,6 @@ public class Consultas {
             String query = "Select * from item";
             reset = stmt.executeQuery(query);
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -94,4 +90,91 @@ public class Consultas {
         //TODO
         return false;
     }
+
+    public ResultSet existeProducto(String producto){
+        Statement stmt;
+        ResultSet reset;
+        try {
+            stmt = connection.createStatement();
+            String query = "Select * from item where nombre = '" + producto + "'";
+            reset = stmt.executeQuery(query);
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+            return null;
+        }
+        return reset;
+    }
+
+
+
+    public boolean insertarStock(String producto, String mes, String año,
+                              String cantidad, String cliente){
+        try {
+            Statement stmt = connection.createStatement();
+            String sql = "insert into detallestock (iditem, cantidad, fechaalta, cliente" +
+                    ", fechamodificacion, mes, año) values ("+ getIdProducto(producto) + ", " +
+                    cantidad + ", getdate(), " + getIdCliente(cliente) + ", getdate(), " + mes +
+                    ", " + año + ")";
+            int n = stmt.executeUpdate(sql);
+            return (n == 1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String getIdCliente(String cliente){
+        Statement stmt;
+        ResultSet reset;
+        String id;
+        try {
+            stmt = connection.createStatement();
+            String query = "Select * from cliente where razonsocial = '" + cliente + "'";
+            reset = stmt.executeQuery(query);
+            reset.next();
+            id = reset.getString("cliente");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return id;
+    }
+
+    private String getIdATC(String ATC){
+        Statement stmt;
+        ResultSet reset;
+        String id;
+        try {
+            stmt = connection.createStatement();
+            String query = "Select * from recurso r join usuario u on r.recurso = u.orareferencia " +
+                    "where u.usuario = '" + ATC + "'";
+            reset = stmt.executeQuery(query);
+            reset.next();
+            id = reset.getString("recurso");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return id;
+    }
+
+    private String getIdProducto(String producto){
+        Statement stmt;
+        ResultSet reset;
+        String id;
+        try {
+            stmt = connection.createStatement();
+            String query = "Select * from item where nombre = '" + producto + "'";
+            reset = stmt.executeQuery(query);
+            reset.next();
+            id = reset.getString("iditem");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return id;
+    }
+
+
 }

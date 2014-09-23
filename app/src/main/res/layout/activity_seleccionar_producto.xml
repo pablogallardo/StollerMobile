@@ -8,17 +8,17 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <EditText
-            android:layout_width="match_parent"
+        <AutoCompleteTextView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/productoet" />
+            android:id="@+id/ac_producto" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/pick_quantity"
-            android:id="@+id/textView"
+            android:id="@+id/picktv"
             android:gravity="left" />
 
         <LinearLayout
@@ -35,14 +35,14 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="UM"
-                android:id="@+id/textView2"
+                android:id="@+id/umtv"
                 android:gravity="center" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OK"
-                android:id="@+id/button" />
+                android:id="@+id/okbtn" />
         </LinearLayout>
 
     </LinearLayout>

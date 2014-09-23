@@ -1,22 +1,44 @@
 package ar.com.stoller.stollermobile;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.MultiAutoCompleteTextView;
+import android.widget.TextView;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import ar.com.stoller.stollermobile.app.SeleccionarProductoManager;
 
 
 public class SeleccionarProducto extends Activity {
 
-    private EditText producto;
+    private AutoCompleteTextView producto;
+    private SeleccionarProductoManager manager;
+    private TextView um;
+    private Button okbtn;
+    private boolean sentinela;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seleccionar_producto);
-        producto = (EditText)findViewById(R.id.productoet);
+        producto = (AutoCompleteTextView)findViewById(R.id.ac_producto);
+        okbtn = (Button)findViewById(R.id.okbtn);
+        manager = new SeleccionarProductoManager();
+        sentinela = false;
+        um = (TextView)findViewById(R.id.umtv);
+        (new PopulateProductos()).execute();
+        focusChange();
     }
 
 
@@ -37,5 +59,79 @@ public class SeleccionarProducto extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void focusChange(){
+        producto.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(!b){
+                    (new CheckProducto()).execute();
+                    //TODO toast
+                } else {
+                    sentinela = true;
+                }
+            }
+        });
+    }
+
+    private void okBtnListener(){
+        okbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(sentinela){
+                    //TODO Registrar stock
+                } else{
+                    //TODO Toast corregir producto
+                }
+            }
+        });
+    }
+
+
+    private class PopulateProductos extends AsyncTask<Void, Void, ArrayList<String>> {
+        @Override
+        protected ArrayList<String> doInBackground(Void... voids) {
+
+
+                ArrayList<String> al = manager.getProductos();
+                return al;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> result) {
+            ArrayAdapter<String> aa = new ArrayAdapter<String>(getApplicationContext(),
+                    R.layout.clientesview, result);
+
+            producto.setAdapter(aa);
+        }
+    }
+
+    private class CheckProducto extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            if(manager.existeProducto(producto.getText().toString())){
+                return manager.getUM(producto.getText().toString());
+
+            } else {
+
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            if(result == null){
+                producto.requestFocus();
+                sentinela = false;
+            } else {
+                um.setText(result);
+                sentinela = true;
+            }
+        }
+
+
     }
 }
