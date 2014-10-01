@@ -12,12 +12,18 @@
     <string name="logo">Logo</string>
     <string name="month">Mes</string>
     <string name="year">Año</string>
-    <string name="add">Agregar</string>
-    <string name="pick_quantity">Elija la Cantidad</string>
+    <string name="add">Agregar Producto</string>
+    <string name="pick_quantity">Elija la Cantidad:</string>
+    <string name="address">Dirección:</string>
+    <string name="date">Fecha:</string>
+    <string name="currency">Divisa:</string>
+    <string name="order">Orden de compra:</string>
+    <string name="pricing_list">Lista de precios:</string>
+    <string name="unit_price">Precio unitario:</string>
 
     <string-array name="clientes_context_menu">
-        <item>Ingresar Pedido</item>
-        <item>Ver Pedidos</item>
+        <item>Ingresar Orden de Pedido</item>
+        <item>Ver Órdenes de Pedido</item>
         <item>Registrar Stock</item>
         <item>Ver más información</item>
     </string-array>
@@ -38,5 +44,6 @@
 
     <string name="title_activity_registrar_stock">RegistrarStock</string>
     <string name="title_activity_seleccionar_producto">SeleccionarProducto</string>
+    <string name="title_activity_ingresar_pedido">IngresarPedido</string>
 
 </resources>

@@ -1,10 +1,8 @@
-package ar.com.stoller.stollermobile;
+package ar.com.stoller.stollermobile.app;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,33 +10,41 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 
+import ar.com.stoller.stollermobile.R;
 import ar.com.stoller.stollermobile.app.SeleccionarProductoManager;
 
 
-public class SeleccionarProducto extends Activity {
+public abstract class SeleccionarProducto extends Activity {
 
-    private AutoCompleteTextView producto;
-    private SeleccionarProductoManager manager;
-    private TextView um;
-    private Button okbtn;
-    private boolean sentinela;
+    protected AutoCompleteTextView producto;
+
+    protected TextView um;
+    protected EditText cantidad;
+    protected Button okbtn;
+    protected boolean sentinela;
+    protected SeleccionarProductoManager manager;
+    protected String cliente;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seleccionar_producto);
         producto = (AutoCompleteTextView)findViewById(R.id.ac_producto);
         okbtn = (Button)findViewById(R.id.okbtn);
-        manager = new SeleccionarProductoManager();
+        cantidad = (EditText)findViewById(R.id.cantidadet);
         sentinela = false;
         um = (TextView)findViewById(R.id.umtv);
         (new PopulateProductos()).execute();
         focusChange();
+        okBtnListener();
     }
 
 
@@ -67,7 +73,7 @@ public class SeleccionarProducto extends Activity {
             public void onFocusChange(View view, boolean b) {
                 if(!b){
                     (new CheckProducto()).execute();
-                    //TODO toast
+                    sentinela = false;
                 } else {
                     sentinela = true;
                 }
@@ -75,21 +81,30 @@ public class SeleccionarProducto extends Activity {
         });
     }
 
-    private void okBtnListener(){
+    protected void okBtnListener(){
         okbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(sentinela){
-                    //TODO Registrar stock
+                    try{
+                      okPress();
+                    } catch (NumberFormatException e){
+                    Toast.makeText(getApplicationContext(),
+                            "Por favor, ingrese una cantidad válida.",
+                            Toast.LENGTH_LONG).show();
+                }
                 } else{
-                    //TODO Toast corregir producto
+                    showToastProductoInvalido();
                 }
             }
         });
     }
 
+    protected abstract void okPress();
 
-    private class PopulateProductos extends AsyncTask<Void, Void, ArrayList<String>> {
+
+
+    protected class PopulateProductos extends AsyncTask<Void, Void, ArrayList<String>> {
         @Override
         protected ArrayList<String> doInBackground(Void... voids) {
 
@@ -109,7 +124,7 @@ public class SeleccionarProducto extends Activity {
         }
     }
 
-    private class CheckProducto extends AsyncTask<Void, Void, String> {
+    protected class CheckProducto extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
             if(manager.existeProducto(producto.getText().toString())){
@@ -126,6 +141,7 @@ public class SeleccionarProducto extends Activity {
             if(result == null){
                 producto.requestFocus();
                 sentinela = false;
+                showToastProductoInvalido();
             } else {
                 um.setText(result);
                 sentinela = true;
@@ -133,5 +149,12 @@ public class SeleccionarProducto extends Activity {
         }
 
 
+    }
+
+
+
+    protected void showToastProductoInvalido(){
+        Toast.makeText(this, "Por favor, Ingrese un producto válido.",
+                Toast.LENGTH_LONG).show();
     }
 }

@@ -30,10 +30,15 @@
             android:name=".RegistrarStock"
             android:label="@string/title_activity_registrar_stock" >
         </activity>
+
         <activity
-            android:theme="@android:style/Theme.Holo.Light.Dialog"
-            android:name=".SeleccionarProducto"
-            android:label="@string/title_activity_seleccionar_producto" >
+            android:name=".SeleccionarProductoStock"
+            android:label="@string/title_activity_seleccionar_producto"
+            android:theme="@android:style/Theme.Holo.Light.Dialog" >
+        </activity>
+        <activity
+            android:name=".IngresarPedido"
+            android:label="@string/title_activity_ingresar_pedido" >
         </activity>
     </application>
 

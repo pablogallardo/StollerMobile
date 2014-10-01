@@ -1,50 +1,85 @@
-<FrameLayout
+<LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+
 
         <AutoCompleteTextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/ac_producto" />
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/pick_quantity"
-            android:id="@+id/picktv"
-            android:gravity="left" />
-
-        <LinearLayout
+    <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:layout_width="100dp"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/pick_quantity"
+            android:id="@+id/picktv"
+            android:gravity="left"
+            android:layout_weight="2" />
+
+        <EditText
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText2" />
+                android:id="@+id/cantidadet"
+            android:inputType="numberDecimal"
+            android:layout_weight="1" />
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="UM"
                 android:id="@+id/umtv"
-                android:gravity="center" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OK"
-                android:id="@+id/okbtn" />
-        </LinearLayout>
+                android:gravity="center"
+                android:layout_weight="1" />
 
     </LinearLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/precioLayout">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/unit_price"
+            android:id="@+id/textView"
+            android:layout_weight="2" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText"
+            android:inputType="numberDecimal"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="USD"
+            android:id="@+id/textView2"
+            android:layout_weight="1"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:id="@+id/okbtn" />
+
+
+
+</LinearLayout>
+

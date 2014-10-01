@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ar.com.stoller.stollermobile.SeleccionarProducto;
 import ar.com.stoller.stollermobile.db.Consultas;
 
 /**
@@ -24,7 +23,7 @@ public class SeleccionarProductoManager {
     }
 
     public ArrayList<String> getProductos()  {
-        reset = consulta.getProductos();
+        reset = consulta.getTabla("item");
         try {
             while (reset.next()) {
                 productos.add(reset.getString("nombre"));
@@ -59,5 +58,10 @@ public class SeleccionarProductoManager {
             e.printStackTrace();
             return "lalala";
         }
+    }
+
+    public boolean RegistrarStock(String producto, String mes, String año, String cantidad,
+                                  String cliente){
+        return consulta.insertarStock(producto,mes, año, cantidad,cliente);
     }
 }

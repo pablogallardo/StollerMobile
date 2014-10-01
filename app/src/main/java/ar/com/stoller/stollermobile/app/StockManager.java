@@ -37,4 +37,8 @@ public class StockManager {
         }
         return stock;
     }
+
+    public boolean eliminarStock(String producto){
+        return consulta.eliminarStockProducto(cliente, producto, mes, año);
+    }
 }

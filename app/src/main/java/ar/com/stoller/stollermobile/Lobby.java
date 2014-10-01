@@ -90,6 +90,9 @@ public class Lobby extends Activity {
         Intent intent;
         switch (menuItemIndex){
             case 0:{
+                intent = new Intent(this,IngresarPedido.class);
+                intent.putExtra("clienteseleccionado", listItemName);
+                startActivity(intent);
                 break;
             }
             case 1:{

@@ -12,9 +12,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,6 +32,8 @@ public class RegistrarStock extends ActionBarActivity {
     private ListView stocklv;
     private StockManager sm;
     private String cliente;
+    private Boolean resumed;
+    private StockAdapter stockAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class RegistrarStock extends ActionBarActivity {
         add = (Button)findViewById(R.id.addbtn);
         stocklv = (ListView)findViewById(R.id.stocklv);
         Bundle bundle = getIntent().getExtras();
+
         if(bundle.getString("clienteseleccionado")!= null)
         {
 
@@ -51,9 +54,10 @@ public class RegistrarStock extends ActionBarActivity {
         dateItemChanged();
         fillMonths();
         fillYears();
-        new StockCliente().execute(cliente);
+        (new StockCliente()).execute(cliente);
         stockLongClick();
         addClick();
+        resumed = false;
     }
 
 
@@ -100,7 +104,11 @@ public class RegistrarStock extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),SeleccionarProducto.class);
+                Intent i = new Intent(getApplicationContext(),SeleccionarProductoStock.class);
+                i.putExtra("cliente", cliente);
+                i.putExtra("month", String.valueOf(month.getSelectedItemPosition() + 1));
+                i.putExtra("year", year.getSelectedItem().toString());
+                resumed = true;
                 startActivity(i);
             }
         });
@@ -138,13 +146,14 @@ public class RegistrarStock extends ActionBarActivity {
         stocklv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                dialogRemove();
+                dialogRemove(position);
+
                 return true;
             }
         });
     }
 
-    private void dialogRemove(){
+    private void dialogRemove(final int position){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Alerta");
         alertDialogBuilder
@@ -153,7 +162,7 @@ public class RegistrarStock extends ActionBarActivity {
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        new EliminarStock().execute(((String[])stockAdapter.getItem(position))[0]);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -185,12 +194,36 @@ public class RegistrarStock extends ActionBarActivity {
         @Override
         protected void onPostExecute(ArrayList<String[]> list) {
             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-            StockAdapter sa = new StockAdapter(getApplicationContext(), list);
-            stocklv.setAdapter(sa);
+            stockAdapter = new StockAdapter(getApplicationContext(), list);
+            stocklv.setAdapter(stockAdapter);
         }
     }
 
+    private class EliminarStock extends AsyncTask<String, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            return sm.eliminarStock(strings[0]);
+        }
 
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if(result){
+                (new StockCliente()).execute(cliente);
+            } else {
+                Toast.makeText(getApplicationContext(),"No se pudo eliminar el stock seleccionado",
+                        Toast.LENGTH_SHORT);
+            }
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(resumed){
+            (new StockCliente()).execute(cliente);
+            resumed = false;
+        }
+    }
 
 
 }
