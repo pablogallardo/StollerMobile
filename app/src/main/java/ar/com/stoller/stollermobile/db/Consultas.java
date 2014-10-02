@@ -43,12 +43,14 @@ public class Consultas {
 				return razonsocial;
 			} else {
 				stmt.close();
-				return null;
+				return "FAILED";
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
-		}
+		} catch (NullPointerException n){
+            return null;
+        }
 
 	}
 
@@ -99,7 +101,7 @@ public class Consultas {
      * Devuelve un ResultSet con todos los datos de los productos existentes de la BD.
      * @return
      */
-    public ResultSet getTabla(String tabla){
+    private ResultSet getTabla(String tabla){
         Statement stmt;
         ResultSet reset;
         try {
@@ -112,6 +114,15 @@ public class Consultas {
         }
         return reset;
     }
+
+    public ResultSet getListaPrecios(){
+        return getTabla("ListaPrecios");
+    }
+
+    public ResultSet getProductos(){
+        return getTabla("Item");
+    }
+
 
     /**
      * Elimina de la BD el Stock de un cliente de un determinado mes y año.
@@ -173,7 +184,8 @@ public class Consultas {
         ResultSet reset;
         try {
             stmt = connection.createStatement();
-            String query = "Select * from Direccion where cliente = " + getIdCliente(cliente);
+            String query = "Select * from Direccion where cliente = '" + getIdCliente(cliente) +
+                    "' AND idtipodireccion = 2";
             reset = stmt.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();

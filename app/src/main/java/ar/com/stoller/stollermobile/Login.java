@@ -81,15 +81,20 @@ public class Login extends Activity {
         protected void onPostExecute(String result) {
             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             if (result != null) {
+                if(result == "FAILED"){
+                    Toast.makeText(getApplicationContext(), "Usuario o contraseña inválidos",
+                            Toast.LENGTH_LONG).show();
+                }else {
 
-                Intent intent = new Intent(getApplicationContext(), Lobby.class);
-                intent.putExtra("Usuario", user.getText().toString());
-                intent.putExtra("razonsocial", result);
+                    Intent intent = new Intent(getApplicationContext(), Lobby.class);
+                    intent.putExtra("Usuario", user.getText().toString());
+                    intent.putExtra("razonsocial", result);
 
-                startActivity(intent);
-                finish();
+                    startActivity(intent);
+                    finish();
+                }
             } else {
-                Toast.makeText(getApplicationContext(), "Usuario o contraseña inválidos",
+                Toast.makeText(getApplicationContext(), "Servidor no disponible",
                         Toast.LENGTH_LONG).show();
             }
         }

@@ -23,7 +23,7 @@ public class SeleccionarProductoManager {
     }
 
     public ArrayList<String> getProductos()  {
-        reset = consulta.getTabla("item");
+        reset = consulta.getProductos();
         try {
             while (reset.next()) {
                 productos.add(reset.getString("nombre"));

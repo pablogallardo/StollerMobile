@@ -40,6 +40,7 @@ public class DBConnection {
 		} catch (Exception e){
 			System.out.println("Connection unsuccessfull");
 			e.printStackTrace();
+            return null;
 		}
 		return conn;
 

@@ -20,11 +20,21 @@ public class IngresarPedidoManager {
     }
 
     public ArrayList<String> getDirecciones(){
-        ResultSet reset = consulta.getTabla("direccion");
+        return getColumnaEnTabla(consulta.getDirecciones(cliente), "domicilio");
+    }
+
+    public ArrayList<String> getListaPrecios(){
+        return getColumnaEnTabla(consulta.getListaPrecios(), "nombre");
+    }
+
+
+
+    private ArrayList<String> getColumnaEnTabla(ResultSet reset, String columna){
+
         ArrayList<String> al = new ArrayList<String>();
         try{
             while(reset.next()){
-                al.add(reset.getString("nombre"));
+                al.add(reset.getString(columna));
             }
             return al;
         } catch (SQLException e){
@@ -32,8 +42,4 @@ public class IngresarPedidoManager {
             return null;
         }
     }
-
-
-
-
 }
