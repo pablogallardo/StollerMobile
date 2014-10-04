@@ -187,6 +187,7 @@ public class Consultas {
             String query = "Select * from Direccion where cliente = '" + getIdCliente(cliente) +
                     "' AND idtipodireccion = 2";
             reset = stmt.executeQuery(query);
+
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -247,6 +248,16 @@ public class Consultas {
         }
         return id;
     }
+
+    public void insertarOrdenPedido() throws SQLException {
+        connection.setAutoCommit(false);
+        String sql = "Insert into OrdenPedido (cliente, idtermino, ordencompra, fechaordenpedido," +
+                "idlistaprecios, iddivisa, idextado, creaddopor, fechacreación, " +
+                "iddireccionfacturacion";
+        //TODO
+    }
+
+
 
 
 

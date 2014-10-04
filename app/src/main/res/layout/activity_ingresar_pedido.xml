@@ -50,7 +50,8 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/date"
             android:layout_weight="1"
-            android:layout_gravity="right" />
+            android:layout_gravity="right"
+            android:textColor="@color/blue" />
     </LinearLayout>
 
     <LinearLayout
@@ -72,7 +73,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/sp_currency"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:entries="@array/divisas"/>
     </LinearLayout>
 
     <LinearLayout
@@ -119,15 +121,30 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add"
-        android:id="@+id/buttonAdd" />
+        android:layout_height="wrap_content">
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:id="@+id/buttonOK"
+            android:layout_weight="1" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/add"
+            android:id="@+id/buttonAdd"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/productos" />
 

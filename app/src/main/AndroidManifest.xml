@@ -37,6 +37,11 @@
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
         <activity
+            android:name=".SeleccionarProductoOrdenPedido"
+            android:label="@string/title_activity_seleccionar_producto"
+            android:theme="@android:style/Theme.Holo.Light.Dialog" >
+        </activity>
+        <activity
             android:name=".IngresarPedido"
             android:label="@string/title_activity_ingresar_pedido" >
         </activity>

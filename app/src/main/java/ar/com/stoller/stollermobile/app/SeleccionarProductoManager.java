@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import ar.com.stoller.stollermobile.db.Consultas;
+import ar.com.stoller.stollermobile.objects.OrdenPedido;
 
 /**
  * Created by gallardp on 21/09/14.
@@ -15,11 +16,20 @@ public class SeleccionarProductoManager {
     private String usuario;
     private Consultas consulta;
     private ResultSet reset;
+    private OrdenPedido ordenPedido;
+    private String cliente;
 
     public SeleccionarProductoManager(){
         productos = new ArrayList<String>();
         consulta = new Consultas();
 
+    }
+
+    public SeleccionarProductoManager(OrdenPedido ordenPedido, String cliente){
+        productos = new ArrayList<String>();
+        consulta = new Consultas();
+        this.ordenPedido = ordenPedido;
+        this.cliente = cliente;
     }
 
     public ArrayList<String> getProductos()  {
@@ -60,8 +70,27 @@ public class SeleccionarProductoManager {
         }
     }
 
+
     public boolean RegistrarStock(String producto, String mes, String año, String cantidad,
                                   String cliente){
         return consulta.insertarStock(producto,mes, año, cantidad,cliente);
+    }
+
+    public ArrayList<String> getDirecciones(){
+        return getColumnaEnTabla(consulta.getDirecciones(cliente), "domicilio");
+    }
+
+    private ArrayList<String> getColumnaEnTabla(ResultSet reset, String columna){
+
+        ArrayList<String> al = new ArrayList<String>();
+        try{
+            while(reset.next()){
+                al.add(reset.getString(columna));
+            }
+            return al;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }

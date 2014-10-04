@@ -59,7 +59,7 @@
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/precioET"
             android:inputType="numberDecimal"
             android:layout_weight="1" />
 
@@ -72,6 +72,16 @@
             android:layout_weight="1"
             android:gravity="center_horizontal" />
     </LinearLayout>
+
+    <Spinner
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/sp_address" />
+
+    <CalendarView
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:id="@+id/calendarEnvio" />
 
     <Button
         android:layout_width="fill_parent"

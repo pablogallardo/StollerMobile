@@ -1,6 +1,7 @@
 package ar.com.stoller.stollermobile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -14,9 +15,12 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import ar.com.stoller.stollermobile.app.IngresarPedidoManager;
+import ar.com.stoller.stollermobile.app.StockAdapter;
+import ar.com.stoller.stollermobile.objects.OrdenPedido;
 
 
 public class IngresarPedido extends Activity{
@@ -29,18 +33,23 @@ public class IngresarPedido extends Activity{
     private Button buttonAdd;
     private ListView productos;
     private IngresarPedidoManager manager;
+    private String cliente;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingresar_pedido);
         Bundle b = getIntent().getExtras();
-        manager = new IngresarPedidoManager(b.getString("clienteseleccionado"));
+        cliente = b.getString("clienteseleccionado");
+        manager = new IngresarPedidoManager(cliente);
         instantiateObjectView();
+        fecha.setText(" " + manager.getOrdenPedido().getFecha().toString());
         new PopulateDireccion().execute();
         new PopulateListaPrecio().execute();
+        populateProductos();
+        addButonListener();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,11 +81,20 @@ public class IngresarPedido extends Activity{
         productos = (ListView)findViewById(R.id.productos);
     }
 
+    private void populateProductos(){
+        ArrayList<String[]> list = manager.getArrayDetalles();
+        StockAdapter stockAdapter = new StockAdapter(getApplicationContext(), list);
+        productos.setAdapter(stockAdapter);
+    }
     private void addButonListener(){
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(getApplicationContext(),
+                        SeleccionarProductoOrdenPedido.class);
+                i.putExtra("OrdenPedido", manager.getOrdenPedido());
+                i.putExtra("cliente", cliente);
+                startActivityForResult(i, 1);
             }
         });
     }
@@ -107,7 +125,21 @@ public class IngresarPedido extends Activity{
         }
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        populateProductos();
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            manager.setOrdenPedido((OrdenPedido)data.getSerializableExtra("data"));
+            //Do whatever you want with yourData
+        }
+    }
 
 
 }

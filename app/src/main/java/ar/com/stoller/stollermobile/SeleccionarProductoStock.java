@@ -18,12 +18,13 @@ public class SeleccionarProductoStock extends SeleccionarProducto {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        findViewById(R.id.precioLayout).setVisibility(View.GONE);
+        ocultarViews();
         Bundle bundle = getIntent().getExtras();
         cliente = bundle.getString("cliente");
         month = bundle.getString("month");
         year = bundle.getString("year");
         manager = new SeleccionarProductoManager();
+        populateProductos();
     }
 
     @Override
@@ -48,6 +49,11 @@ public class SeleccionarProductoStock extends SeleccionarProducto {
                 showToastProductoInvalido();
             }
         }
+    }
 
+    private void ocultarViews(){
+        findViewById(R.id.precioLayout).setVisibility(View.GONE);
+        findViewById(R.id.calendarEnvio).setVisibility(View.GONE);
+        findViewById(R.id.sp_address).setVisibility(View.GONE);
     }
 }

@@ -9,7 +9,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,9 @@ public abstract class SeleccionarProducto extends Activity {
     protected boolean sentinela;
     protected SeleccionarProductoManager manager;
     protected String cliente;
+    protected CalendarView calendarEnvio;
+    protected Spinner address;
+    protected EditText precio;
 
 
 
@@ -37,16 +42,17 @@ public abstract class SeleccionarProducto extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seleccionar_producto);
-        producto = (AutoCompleteTextView)findViewById(R.id.ac_producto);
-        okbtn = (Button)findViewById(R.id.okbtn);
-        cantidad = (EditText)findViewById(R.id.cantidadet);
+        instantiateObjects();
         sentinela = false;
-        um = (TextView)findViewById(R.id.umtv);
-        (new PopulateProductos()).execute();
+
         focusChange();
         okBtnListener();
     }
 
+
+    protected void populateProductos(){
+        new PopulateProductos().execute();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -151,6 +157,15 @@ public abstract class SeleccionarProducto extends Activity {
 
     }
 
+    private void instantiateObjects(){
+        producto = (AutoCompleteTextView)findViewById(R.id.ac_producto);
+        okbtn = (Button)findViewById(R.id.okbtn);
+        cantidad = (EditText)findViewById(R.id.cantidadet);
+        um = (TextView)findViewById(R.id.umtv);
+        calendarEnvio = (CalendarView)findViewById(R.id.calendarEnvio);
+        address = (Spinner)findViewById(R.id.sp_address);
+        precio = (EditText)findViewById(R.id.precioET);
+    }
 
 
     protected void showToastProductoInvalido(){
