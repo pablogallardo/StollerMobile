@@ -1,6 +1,7 @@
 package ar.com.stoller.stollermobile.objects;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 /**
  * Created by gallardp on 2/10/14.
@@ -8,14 +9,14 @@ import java.io.Serializable;
 public class DetalleOrdenPedido implements Serializable{
 
     private String producto;
-    private String precioUnitario;
-    private String cantidad;
-    private String fechaEnvio;
-    private String nroLinea;
+    private float precioUnitario;
+    private int cantidad;
+    private Date fechaEnvio;
+    private int nroLinea;
     private String direccionEnvio;
 
-    public DetalleOrdenPedido(String producto, String precioUnitario, String cantidad,
-                              String fechaEnvio, String nroLinea, String direccionEnvio) {
+    public DetalleOrdenPedido(String producto, float precioUnitario, int cantidad,
+                              Date fechaEnvio, int nroLinea, String direccionEnvio) {
         this.producto = producto;
         this.precioUnitario = precioUnitario;
         this.cantidad = cantidad;
@@ -32,42 +33,50 @@ public class DetalleOrdenPedido implements Serializable{
         this.producto = producto;
     }
 
-    public String getPrecioUnitario() {
+    public float getPrecioUnitario() {
         return precioUnitario;
     }
 
-    public void setPrecioUnitario(String precioUnitario) {
+    public void setPrecioUnitario(float precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
 
-    public String getCantidad() {
+    public int getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(String cantidad) {
+    public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
 
-    public String getFechaEnvio() {
+    public Date getFechaEnvio() {
         return fechaEnvio;
     }
 
-    public void setFechaEnvio(String fechaEnvio) {
+    public void setFechaEnvio(Date fechaEnvio) {
         this.fechaEnvio = fechaEnvio;
     }
 
-    public String getNroLinea() {
+    public int getNroLinea() {
         return nroLinea;
     }
 
-    public void setNroLinea(String nroLinea) {
+    public void setNroLinea(int nroLinea) {
         this.nroLinea = nroLinea;
+    }
+
+    public String getDireccionEnvio() {
+        return direccionEnvio;
+    }
+
+    public void setDireccionEnvio(String direccionEnvio) {
+        this.direccionEnvio = direccionEnvio;
     }
 
     public String[] toArray(){
         String[] s = new String[2];
         s[0] = producto;
-        s[1] = cantidad;
+        s[1] = ""+cantidad;
         return s;
     }
 

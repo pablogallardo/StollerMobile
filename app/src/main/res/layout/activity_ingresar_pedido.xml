@@ -130,8 +130,8 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="OK"
-            android:id="@+id/buttonOK"
+            android:text="Guardar"
+            android:id="@+id/buttonSave"
             android:layout_weight="1" />
 
         <Button

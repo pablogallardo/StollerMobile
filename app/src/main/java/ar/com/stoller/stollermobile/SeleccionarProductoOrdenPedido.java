@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.CalendarView;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import ar.com.stoller.stollermobile.app.SeleccionarProducto;
@@ -31,8 +33,8 @@ public class SeleccionarProductoOrdenPedido extends SeleccionarProducto{
 
     @Override
     protected void okPress() {
-        ordenPedido.agregarDetalle(producto.getText().toString(), precio.getText().toString(),
-                cantidad.getText().toString(), calendarEnvio.toString(), "1",
+        ordenPedido.agregarDetalle(producto.getText().toString(), Float.parseFloat(precio.getText().toString()),
+                Integer.parseInt(cantidad.getText().toString()), new Date(calendarEnvio.getDate()), 1,
                 address.getSelectedItem().toString());
         Intent data = new Intent();
         data.putExtra("data", ordenPedido);

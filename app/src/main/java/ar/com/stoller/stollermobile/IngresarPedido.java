@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -28,12 +29,14 @@ public class IngresarPedido extends Activity{
     private TextView fecha;
     private Spinner direccion;
     private Spinner divisa;
+    private String usuario;
     private Spinner listaPrecios;
     private EditText ordenCompra;
     private Button buttonAdd;
     private ListView productos;
     private IngresarPedidoManager manager;
     private String cliente;
+    private Button buttonSave;
 
 
     @Override
@@ -42,6 +45,7 @@ public class IngresarPedido extends Activity{
         setContentView(R.layout.activity_ingresar_pedido);
         Bundle b = getIntent().getExtras();
         cliente = b.getString("clienteseleccionado");
+        usuario = b.getString("usuariovendedor");
         manager = new IngresarPedidoManager(cliente);
         instantiateObjectView();
         fecha.setText(" " + manager.getOrdenPedido().getFecha().toString());
@@ -49,6 +53,7 @@ public class IngresarPedido extends Activity{
         new PopulateListaPrecio().execute();
         populateProductos();
         addButonListener();
+        saveButtonListener();
     }
 
     @Override
@@ -79,6 +84,7 @@ public class IngresarPedido extends Activity{
         ordenCompra = (EditText)findViewById(R.id.buyOrder);
         buttonAdd = (Button)findViewById(R.id.buttonAdd);
         productos = (ListView)findViewById(R.id.productos);
+        buttonSave = (Button)findViewById(R.id.buttonSave);
     }
 
     private void populateProductos(){
@@ -98,6 +104,23 @@ public class IngresarPedido extends Activity{
             }
         });
     }
+
+    private void saveButtonListener(){
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OrdenPedido op = manager.getOrdenPedido();
+                op.setDireccionFacturacion(direccion.getSelectedItem().toString());
+                op.setDivisa("USD");
+                op.setEstado("Ingresado");
+                op.setListaPrecios(listaPrecios.getSelectedItem().toString());
+                op.setOrdenCompra(ordenCompra.getText().toString());
+                op.setCreadoPor(usuario);
+                new SaveOrdenPedido().execute();
+            }
+        });
+    }
+
     private class PopulateDireccion extends AsyncTask<String, Void, ArrayList<String>> {
         @Override
         protected ArrayList<String> doInBackground(String... strings) {
@@ -138,6 +161,23 @@ public class IngresarPedido extends Activity{
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){
             manager.setOrdenPedido((OrdenPedido)data.getSerializableExtra("data"));
             //Do whatever you want with yourData
+        }
+    }
+
+    private class SaveOrdenPedido extends AsyncTask<Void, Void, Boolean>{
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            return manager.guardarOrdenPedido(cliente, manager.getOrdenPedido(), usuario);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if(aBoolean){
+                Toast.makeText(getApplicationContext(),"Se grabó", Toast.LENGTH_LONG).show();
+                finish();
+            } else {
+                Toast.makeText(getApplicationContext(),"No se grabó", Toast.LENGTH_LONG).show();
+            }
         }
     }
 

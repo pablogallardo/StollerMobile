@@ -35,8 +35,8 @@ public class IngresarPedidoManager {
         return getColumnaEnTabla(consulta.getListaPrecios(), "nombre");
     }
 
-    public void agregarDetalleOrdenPedido(String producto, String precioUnitario, String cantidad,
-                                          String fechaEnvio, String nroLinea,
+    public void agregarDetalleOrdenPedido(String producto, float precioUnitario, int cantidad,
+                                          Date fechaEnvio, int nroLinea,
                                           String direccionEnvio){
         ordenPedido.agregarDetalle(producto, precioUnitario, cantidad, fechaEnvio, nroLinea,
                 direccionEnvio);
@@ -52,7 +52,7 @@ public class IngresarPedidoManager {
         ArrayList<String> al = new ArrayList<String>();
         try{
             while(reset.next()){
-                al.add(reset.getString(columna));
+                al.add(""+reset.getString(columna));
             }
             return al;
         } catch (SQLException e){
@@ -67,5 +67,9 @@ public class IngresarPedidoManager {
 
     public ArrayList<String[]> getArrayDetalles(){
         return ordenPedido.getArrayDetalles();
+    }
+
+    public boolean guardarOrdenPedido(String cliente, OrdenPedido orden, String vendedor){
+        return consulta.coordinatedInsertOP(cliente, orden, vendedor);
     }
 }

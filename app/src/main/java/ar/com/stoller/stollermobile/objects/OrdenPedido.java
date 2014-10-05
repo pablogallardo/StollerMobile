@@ -17,6 +17,7 @@ public class OrdenPedido implements Serializable{
     private String estado;
     private String direccionFacturacion;
     private ArrayList<DetalleOrdenPedido> detalle;
+    private String creadoPor;
 
     public OrdenPedido(String ordenCompra, String listaPrecios, String divisa,
                        String estado, String direccionFacturacion) {
@@ -85,8 +86,24 @@ public class OrdenPedido implements Serializable{
         this.direccionFacturacion = direccionFacturacion;
     }
 
-    public void agregarDetalle(String producto, String precioUnitario, String cantidad,
-                               String fechaEnvio, String nroLinea, String direccionEnvio){
+    public String getCreadoPor() {
+        return creadoPor;
+    }
+
+    public void setCreadoPor(String creadoPor) {
+        this.creadoPor = creadoPor;
+    }
+
+    public ArrayList<DetalleOrdenPedido> getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(ArrayList<DetalleOrdenPedido> detalle) {
+        this.detalle = detalle;
+    }
+
+    public void agregarDetalle(String producto, float precioUnitario, int cantidad,
+                               Date fechaEnvio, int nroLinea, String direccionEnvio){
         detalle.add(new DetalleOrdenPedido(producto, precioUnitario, cantidad, fechaEnvio,
                 nroLinea, direccionEnvio));
     }

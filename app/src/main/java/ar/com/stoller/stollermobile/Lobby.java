@@ -92,6 +92,7 @@ public class Lobby extends Activity {
             case 0:{
                 intent = new Intent(this,IngresarPedido.class);
                 intent.putExtra("clienteseleccionado", listItemName);
+                intent.putExtra("usuariovendedor", usuario);
                 startActivity(intent);
                 break;
             }

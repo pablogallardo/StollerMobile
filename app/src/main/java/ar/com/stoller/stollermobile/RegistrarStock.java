@@ -34,6 +34,7 @@ public class RegistrarStock extends ActionBarActivity {
     private String cliente;
     private Boolean resumed;
     private StockAdapter stockAdapter;
+    private Button okBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class RegistrarStock extends ActionBarActivity {
         month = (Spinner)findViewById(R.id.monthspin);
         add = (Button)findViewById(R.id.addbtn);
         stocklv = (ListView)findViewById(R.id.stocklv);
+        okBtn = (Button)findViewById(R.id.okbtn);
         Bundle bundle = getIntent().getExtras();
 
         if(bundle.getString("clienteseleccionado")!= null)
@@ -58,6 +60,7 @@ public class RegistrarStock extends ActionBarActivity {
         stockLongClick();
         addClick();
         resumed = false;
+        okClickListener();
     }
 
 
@@ -174,6 +177,15 @@ public class RegistrarStock extends ActionBarActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 
+    }
+
+    private void okClickListener(){
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
 

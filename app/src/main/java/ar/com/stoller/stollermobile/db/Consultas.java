@@ -1,9 +1,16 @@
 package ar.com.stoller.stollermobile.db;
 
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Iterator;
+
+import ar.com.stoller.stollermobile.objects.DetalleOrdenPedido;
+import ar.com.stoller.stollermobile.objects.OrdenPedido;
 
 /**
  * Created by gallardp on 7/09/14.
@@ -197,68 +204,160 @@ public class Consultas {
 
 
 
-    private String getIdCliente(String cliente){
+    private long getIdCliente(String cliente){
         Statement stmt;
         ResultSet reset;
-        String id;
+        long id;
         try {
             stmt = connection.createStatement();
             String query = "Select * from cliente where razonsocial = '" + cliente + "'";
             reset = stmt.executeQuery(query);
             reset.next();
-            id = reset.getString("cliente");
+            id = reset.getLong("cliente");
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return 0;
         }
         return id;
     }
 
-    private String getIdATC(String ATC){
+    private int getIdATC(String ATC){
         Statement stmt;
         ResultSet reset;
-        String id;
+        int id;
         try {
             stmt = connection.createStatement();
             String query = "Select * from recurso r join usuario u on r.recurso = u.orareferencia " +
                     "where u.usuario = '" + ATC + "'";
             reset = stmt.executeQuery(query);
             reset.next();
-            id = reset.getString("recurso");
+            id = reset.getInt("recurso");
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return 1;
         }
         return id;
     }
 
-    private String getIdProducto(String producto){
+    private int getIdProducto(String producto){
         Statement stmt;
         ResultSet reset;
-        String id;
+        int id;
         try {
             stmt = connection.createStatement();
             String query = "Select * from item where nombre = '" + producto + "'";
             reset = stmt.executeQuery(query);
             reset.next();
-            id = reset.getString("iditem");
+            id = reset.getInt("iditem");
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return 0;
         }
         return id;
     }
 
-    public void insertarOrdenPedido() throws SQLException {
-        connection.setAutoCommit(false);
+    private void insertarOrdenPedido(String cliente, OrdenPedido orden, String vendedor)
+            throws SQLException {
         String sql = "Insert into OrdenPedido (cliente, idtermino, ordencompra, fechaordenpedido," +
-                "idlistaprecios, iddivisa, idextado, creaddopor, fechacreación, " +
-                "iddireccionfacturacion";
-        //TODO
+                "idlistaprecios, iddivisa, idestado, creadopor, fechacreacion, " +
+                "iddireccionfacturacion, vendedor) values (?, 1, ?, ?, ?, 1, 1, ?, ?, ?, ?)";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setLong(1, getIdCliente(cliente));
+        stmt.setString(2, orden.getOrdenCompra());
+        stmt.setDate(3, orden.getFecha());
+        stmt.setInt(4, getIdListaPrecios(orden.getListaPrecios()));
+        stmt.setString(5, orden.getCreadoPor());
+        stmt.setDate(6, getActualDate());
+        stmt.setInt(7, getIdDireccion(getIdCliente(cliente), orden.getDireccionFacturacion()));
+        stmt.setInt(8, getIdATC(vendedor));
+        stmt.executeUpdate();
+    }
+
+    private Date getActualDate(){
+        Calendar cal = Calendar.getInstance();
+        java.util.Date dateUtil = cal.getTime();
+        return new Date(dateUtil.getTime());
     }
 
 
+    private int getIdDireccion(long cliente, String direccion){
+        Statement stmt;
+        ResultSet reset;
+        int id;
+        try {
+            stmt = connection.createStatement();
+            String query = "select * from Direccion where cliente = '" + cliente +
+                    "' AND domicilio = '" + direccion + "'";
+            reset = stmt.executeQuery(query);
+            reset.next();
+            id = reset.getInt("iddireccion");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return id;
+    }
 
+    private int getIdListaPrecios(String lista){
+        Statement stmt;
+        ResultSet reset;
+        int id;
+        try {
+            stmt = connection.createStatement();
+            String query = "Select * from ListaPrecios where nombre = '" + lista + "'";
+            reset = stmt.executeQuery(query);
+            reset.next();
+            id = reset.getInt("idlistaprecios");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return id;
+    }
+
+    private int getLastID() throws SQLException {
+        String sql = "Select @@Identity as 'ID'";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        ResultSet reset = stmt.executeQuery();
+        reset.next();
+        return reset.getInt("ID");
+    }
+
+    private void insertarDetallePedido(String cliente,DetalleOrdenPedido detalle, String creadoPort,
+                                       int idOP)
+            throws SQLException {
+        String sql = "INSERT INTO DetalleOrdenPedido (iditem, preciou, cantidad, nrolinea, " +
+                "iddireccionenvio, fechaenvio, idestado, creadopor, fechacreacion, idordenpedido) " +
+                "values (?, ?, ?, ?, ?, ?, 1, ?, ?, ?)";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, getIdProducto(detalle.getProducto()));
+        stmt.setFloat(2, detalle.getPrecioUnitario());
+        stmt.setInt(3, detalle.getCantidad());
+        stmt.setInt(4, detalle.getNroLinea());
+        stmt.setInt(5, getIdDireccion(getIdCliente(cliente), detalle.getDireccionEnvio()));
+        stmt.setDate(6, detalle.getFechaEnvio());
+        stmt.setString(7, creadoPort);
+        stmt.setDate(8, getActualDate());
+        stmt.setInt(9, idOP);
+    }
+
+    public boolean coordinatedInsertOP(String cliente, OrdenPedido orden, String vendedor) {
+        try {
+            connection.setAutoCommit(false);
+            insertarOrdenPedido(cliente, orden, vendedor);
+            Iterator<DetalleOrdenPedido> iterador = orden.getDetalle().iterator();
+            int idOP = getLastID();
+            while (iterador.hasNext()) {
+                insertarDetallePedido(cliente, iterador.next(), orden.getCreadoPor(), idOP);
+            }
+            connection.commit();
+            connection.setAutoCommit(true);
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
 
