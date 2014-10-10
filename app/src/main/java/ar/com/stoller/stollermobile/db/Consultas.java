@@ -359,6 +359,20 @@ public class Consultas {
         }
     }
 
+    public ResultSet getOrdenes(String cliente){
+        Statement stmt;
+        ResultSet reset;
+        try {
+            stmt = connection.createStatement();
+            String query = "Select * from OrdenPedido where cliente = '" + getIdCliente(cliente) + "'";
+            reset = stmt.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return reset;
+    }
+
 
 
 }

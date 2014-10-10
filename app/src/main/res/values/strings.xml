@@ -41,7 +41,6 @@
         <item>Noviembre</item>
         <item>Diciembre</item>
     </string-array>
-
     <string-array name="divisas">
         <item>USD</item>
     </string-array>
@@ -49,5 +48,6 @@
     <string name="title_activity_registrar_stock">RegistrarStock</string>
     <string name="title_activity_seleccionar_producto">SeleccionarProducto</string>
     <string name="title_activity_ingresar_pedido">IngresarPedido</string>
+    <string name="title_activity_ver_pedidos">VerPedidos</string>
 
 </resources>

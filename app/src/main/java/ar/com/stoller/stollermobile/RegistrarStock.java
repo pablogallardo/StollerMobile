@@ -145,17 +145,6 @@ public class RegistrarStock extends ActionBarActivity {
 
     }
 
-    private void stockLongClick(){
-        stocklv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                dialogRemove(position);
-
-                return true;
-            }
-        });
-    }
-
     private void dialogRemove(final int position){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Alerta");
@@ -177,6 +166,17 @@ public class RegistrarStock extends ActionBarActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 
+    }
+
+    private void stockLongClick(){
+        stocklv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                dialogRemove(position);
+
+                return true;
+            }
+        });
     }
 
     private void okClickListener(){

@@ -108,6 +108,10 @@ public class OrdenPedido implements Serializable{
                 nroLinea, direccionEnvio));
     }
 
+    public void removeDetalle(int position){
+        detalle.remove(position);
+    }
+
     public ArrayList<String[]> getArrayDetalles(){
         Iterator<DetalleOrdenPedido> i = detalle.iterator();
         ArrayList<String[]> s = new ArrayList<String[]>();

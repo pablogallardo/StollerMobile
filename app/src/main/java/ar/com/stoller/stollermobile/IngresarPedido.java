@@ -1,6 +1,8 @@
 package ar.com.stoller.stollermobile;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,6 +57,7 @@ public class IngresarPedido extends Activity{
         populateProductos();
         addButonListener();
         saveButtonListener();
+        ordenLongClick();
     }
 
     @Override
@@ -146,6 +150,41 @@ public class IngresarPedido extends Activity{
                     R.layout.pedidos_view, list);
             listaPrecios.setAdapter(aa);
         }
+    }
+
+    private void ordenLongClick(){
+        productos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                dialogRemove(position);
+
+                return true;
+            }
+        });
+    }
+
+    private void dialogRemove(final int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Alerta");
+        alertDialogBuilder
+                .setMessage("¿Realmente desea remover este item?")
+                .setCancelable(false)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       manager.removeDetalle(position);
+                        populateProductos();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
     }
 
     @Override

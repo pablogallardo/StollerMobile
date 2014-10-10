@@ -42,6 +42,10 @@ public class IngresarPedidoManager {
                 direccionEnvio);
     }
 
+    public void removeDetalle(int position){
+        ordenPedido.removeDetalle(position);
+    }
+
     public void setOrdenPedido(OrdenPedido op){
         ordenPedido = op;
     }

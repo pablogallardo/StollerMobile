@@ -30,7 +30,6 @@
             android:name=".RegistrarStock"
             android:label="@string/title_activity_registrar_stock" >
         </activity>
-
         <activity
             android:name=".SeleccionarProductoStock"
             android:label="@string/title_activity_seleccionar_producto"
@@ -44,6 +43,10 @@
         <activity
             android:name=".IngresarPedido"
             android:label="@string/title_activity_ingresar_pedido" >
+        </activity>
+        <activity
+            android:name=".VerPedidos"
+            android:label="@string/title_activity_ver_pedidos" >
         </activity>
     </application>
 
