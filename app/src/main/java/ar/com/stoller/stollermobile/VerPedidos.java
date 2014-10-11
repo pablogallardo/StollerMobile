@@ -1,12 +1,13 @@
 package ar.com.stoller.stollermobile;
 
+import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class VerPedidos extends ActionBarActivity {
+public class VerPedidos extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,4 +34,7 @@ public class VerPedidos extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }

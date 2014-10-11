@@ -77,7 +77,7 @@ public class SeleccionarProductoManager {
     }
 
     public ArrayList<String> getDirecciones(){
-        return getColumnaEnTabla(consulta.getDirecciones(cliente), "domicilio");
+        return getColumnaEnTabla(consulta.getDireccionesEnvio(cliente), "domicilio");
     }
 
     private ArrayList<String> getColumnaEnTabla(ResultSet reset, String columna){
@@ -91,6 +91,17 @@ public class SeleccionarProductoManager {
         } catch (SQLException e){
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public float getPrecio(String producto, String listaPrecio){
+        ResultSet reset = consulta.getPrecio(producto, listaPrecio);
+        try {
+            reset.next();
+            return reset.getFloat("precio");
+        } catch (SQLException e){
+            e.printStackTrace();
+            return 0;
         }
     }
 }

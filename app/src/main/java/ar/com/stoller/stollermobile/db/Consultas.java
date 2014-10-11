@@ -127,7 +127,18 @@ public class Consultas {
     }
 
     public ResultSet getProductos(){
-        return getTabla("Item");
+        Statement stmt;
+        ResultSet reset;
+        try {
+            stmt = connection.createStatement();
+            String query = "Select * from item where segmento NOT LIKE '1%000000' and idestado = 1 " +
+                    "order by nombre";
+            reset = stmt.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return reset;
     }
 
 
@@ -186,7 +197,23 @@ public class Consultas {
         }
     }
 
-    public ResultSet getDirecciones(String cliente){
+    public ResultSet getDireccionesFacturacion(String cliente){
+        Statement stmt;
+        ResultSet reset;
+        try {
+            stmt = connection.createStatement();
+            String query = "Select * from Direccion where cliente = '" + getIdCliente(cliente) +
+                    "' AND idtipodireccion = 1";
+            reset = stmt.executeQuery(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return reset;
+    }
+
+    public ResultSet getDireccionesEnvio(String cliente){
         Statement stmt;
         ResultSet reset;
         try {
@@ -201,7 +228,6 @@ public class Consultas {
         }
         return reset;
     }
-
 
 
     private long getIdCliente(String cliente){
@@ -268,7 +294,7 @@ public class Consultas {
         stmt.setInt(4, getIdListaPrecios(orden.getListaPrecios()));
         stmt.setString(5, orden.getCreadoPor());
         stmt.setDate(6, getActualDate());
-        stmt.setInt(7, getIdDireccion(getIdCliente(cliente), orden.getDireccionFacturacion()));
+        stmt.setInt(7, getIdDireccion(getIdCliente(cliente), orden.getDireccionFacturacion(), 1));
         stmt.setInt(8, getIdATC(vendedor));
         stmt.executeUpdate();
     }
@@ -280,14 +306,14 @@ public class Consultas {
     }
 
 
-    private int getIdDireccion(long cliente, String direccion){
+    private int getIdDireccion(long cliente, String direccion, int tipo){
         Statement stmt;
         ResultSet reset;
         int id;
         try {
             stmt = connection.createStatement();
             String query = "select * from Direccion where cliente = '" + cliente +
-                    "' AND domicilio = '" + direccion + "'";
+                    "' AND domicilio = '" + direccion + "' AND idtipodireccion = " + tipo;
             reset = stmt.executeQuery(query);
             reset.next();
             id = reset.getInt("iddireccion");
@@ -334,11 +360,12 @@ public class Consultas {
         stmt.setFloat(2, detalle.getPrecioUnitario());
         stmt.setInt(3, detalle.getCantidad());
         stmt.setInt(4, detalle.getNroLinea());
-        stmt.setInt(5, getIdDireccion(getIdCliente(cliente), detalle.getDireccionEnvio()));
+        stmt.setInt(5, getIdDireccion(getIdCliente(cliente), detalle.getDireccionEnvio(), 2));
         stmt.setDate(6, detalle.getFechaEnvio());
         stmt.setString(7, creadoPort);
         stmt.setDate(8, getActualDate());
         stmt.setInt(9, idOP);
+        stmt.executeUpdate();
     }
 
     public boolean coordinatedInsertOP(String cliente, OrdenPedido orden, String vendedor) {
@@ -365,6 +392,23 @@ public class Consultas {
         try {
             stmt = connection.createStatement();
             String query = "Select * from OrdenPedido where cliente = '" + getIdCliente(cliente) + "'";
+            reset = stmt.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return reset;
+    }
+
+    public ResultSet getPrecio(String producto, String lista){
+        String query = "SELECT DetalleListaPrecios.precio FROM ListaPrecios INNER JOIN  " +
+                "DetalleListaPrecios ON ListaPrecios.idlistaprecios = " +
+                "DetalleListaPrecios.idlistaprecios WHERE (DetalleListaPrecios.iditem = "+ getIdProducto(producto) +
+                ") and (DetalleListaPrecios.idlistaprecios = " + getIdListaPrecios(lista) + ")";
+        Statement stmt;
+        ResultSet reset;
+        try {
+            stmt = connection.createStatement();
             reset = stmt.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();

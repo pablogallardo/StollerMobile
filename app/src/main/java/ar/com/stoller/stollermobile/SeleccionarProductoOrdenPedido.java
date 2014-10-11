@@ -27,6 +27,7 @@ public class SeleccionarProductoOrdenPedido extends SeleccionarProducto{
         Bundle b = getIntent().getExtras();
         ordenPedido = (OrdenPedido)b.getSerializable("OrdenPedido");
         manager = new SeleccionarProductoManager(ordenPedido, b.getString("cliente"));
+        lista = b.getString("lista");
         populateProductos();
         new PopulateDireccion().execute();
     }

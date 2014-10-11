@@ -28,7 +28,7 @@ public class IngresarPedidoManager {
 
 
     public ArrayList<String> getDirecciones(){
-        return getColumnaEnTabla(consulta.getDirecciones(cliente), "domicilio");
+        return getColumnaEnTabla(consulta.getDireccionesFacturacion(cliente), "domicilio");
     }
 
     public ArrayList<String> getListaPrecios(){

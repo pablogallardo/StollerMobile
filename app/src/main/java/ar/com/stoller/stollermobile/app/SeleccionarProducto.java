@@ -35,6 +35,7 @@ public abstract class SeleccionarProducto extends Activity {
     protected CalendarView calendarEnvio;
     protected Spinner address;
     protected EditText precio;
+    protected String lista;
 
 
 
@@ -131,9 +132,11 @@ public abstract class SeleccionarProducto extends Activity {
     }
 
     protected class CheckProducto extends AsyncTask<Void, Void, String> {
+        float precioLista = 0;
         @Override
         protected String doInBackground(Void... voids) {
             if(manager.existeProducto(producto.getText().toString())){
+                precioLista = manager.getPrecio(producto.getText().toString(), lista);
                 return manager.getUM(producto.getText().toString());
 
             } else {
@@ -150,6 +153,7 @@ public abstract class SeleccionarProducto extends Activity {
                 showToastProductoInvalido();
             } else {
                 um.setText(result);
+                precio.setText(""+precioLista);
                 sentinela = true;
             }
         }

@@ -11,8 +11,8 @@ import java.sql.DriverManager;
 public class DBConnection {
 
     private static DBConnection instance = null;
-	//private static final String URL="jdbc:jtds:sqlserver://191282.168.171.:1433/SOBDD;";
-    private static final String URL="jdbc:jtds:sqlserver://10.0.2.2:1433/SOBDD;";
+	//private static final String URL="jdbc:jtds:sqlserver://172.16.185.128:1433/SOBDD;";
+    private static final String URL="jdbc:jtds:sqlserver://192.168.0.103:1433/SOBDD;";
 	private static final String USER="sa";
 	private static final String PASS="asdf1234";
 	private static Connection connection = null;

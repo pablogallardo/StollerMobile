@@ -104,6 +104,7 @@ public class IngresarPedido extends Activity{
                         SeleccionarProductoOrdenPedido.class);
                 i.putExtra("OrdenPedido", manager.getOrdenPedido());
                 i.putExtra("cliente", cliente);
+                i.putExtra("lista", listaPrecios.getSelectedItem().toString());
                 startActivityForResult(i, 1);
             }
         });
