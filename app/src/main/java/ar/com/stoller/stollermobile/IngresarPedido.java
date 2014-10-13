@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import ar.com.stoller.stollermobile.app.IngresarPedidoManager;
@@ -40,6 +41,7 @@ public class IngresarPedido extends Activity{
     private IngresarPedidoManager manager;
     private String cliente;
     private Button buttonSave;
+    private TextView subtotal;
 
 
     @Override
@@ -51,13 +53,14 @@ public class IngresarPedido extends Activity{
         usuario = b.getString("usuariovendedor");
         manager = new IngresarPedidoManager(cliente);
         instantiateObjectView();
-        fecha.setText(" " + manager.getOrdenPedido().getFecha().toString());
+        fecha.setText(" " + new SimpleDateFormat("dd/MM/yyyy").format(manager.getOrdenPedido().getFecha()));
         new PopulateDireccion().execute();
         new PopulateListaPrecio().execute();
         populateProductos();
         addButonListener();
         saveButtonListener();
         ordenLongClick();
+        setSubtotal();
     }
 
     @Override
@@ -81,7 +84,7 @@ public class IngresarPedido extends Activity{
 
     private void instantiateObjectView(){
         fecha = (TextView)findViewById(R.id.date);
-
+        subtotal = (TextView)findViewById(R.id.subtotal);
         direccion = (Spinner)findViewById(R.id.sp_address);
         divisa = (Spinner)findViewById(R.id.sp_currency);
         listaPrecios = (Spinner)findViewById(R.id.sp_priceList);
@@ -173,8 +176,9 @@ public class IngresarPedido extends Activity{
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       manager.removeDetalle(position);
+                        manager.removeDetalle(position);
                         populateProductos();
+                        setSubtotal();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -192,6 +196,7 @@ public class IngresarPedido extends Activity{
     public void onResume(){
         super.onResume();
         populateProductos();
+        setSubtotal();
     }
 
     @Override
@@ -204,21 +209,27 @@ public class IngresarPedido extends Activity{
         }
     }
 
-    private class SaveOrdenPedido extends AsyncTask<Void, Void, Boolean>{
+    private class SaveOrdenPedido extends AsyncTask<Void, Void, Integer>{
         @Override
-        protected Boolean doInBackground(Void... voids) {
+        protected Integer doInBackground(Void... voids) {
             return manager.guardarOrdenPedido(cliente, manager.getOrdenPedido(), usuario);
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            if(aBoolean){
-                Toast.makeText(getApplicationContext(),"Se grabó", Toast.LENGTH_LONG).show();
+        protected void onPostExecute(Integer result) {
+            if(result > 0){
+                Toast.makeText(getApplicationContext(),"El número de orden de pedido es " + result,
+                        Toast.LENGTH_LONG).show();
                 finish();
             } else {
-                Toast.makeText(getApplicationContext(),"No se grabó", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Hubo un problema al intentar grabar la " +
+                        "orden de pedido", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void setSubtotal(){
+        subtotal.setText(" " + manager.getSubtotal());
     }
 
 

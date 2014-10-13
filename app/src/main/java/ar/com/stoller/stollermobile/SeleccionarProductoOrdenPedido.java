@@ -34,8 +34,9 @@ public class SeleccionarProductoOrdenPedido extends SeleccionarProducto{
 
     @Override
     protected void okPress() {
-        ordenPedido.agregarDetalle(producto.getText().toString(), Float.parseFloat(precio.getText().toString()),
-                Integer.parseInt(cantidad.getText().toString()), new Date(calendarEnvio.getDate()), ordenPedido.getArrayDetalles().size(),
+
+        ordenPedido.agregarDetalle(producto.getText().toString(), Float.parseFloat(precio.getText().toString().replace(',','.')),
+                Integer.parseInt(cantidad.getText().toString()), new Date(calendarEnvio.getDate()), ordenPedido.getArrayDetalles().size() + 1,
                 address.getSelectedItem().toString());
         Intent data = new Intent();
         data.putExtra("data", ordenPedido);

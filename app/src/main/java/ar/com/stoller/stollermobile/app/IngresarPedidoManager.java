@@ -3,9 +3,13 @@ package ar.com.stoller.stollermobile.app;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import ar.com.stoller.stollermobile.db.Consultas;
+import ar.com.stoller.stollermobile.objects.DetalleOrdenPedido;
 import ar.com.stoller.stollermobile.objects.OrdenPedido;
 
 /**
@@ -22,7 +26,7 @@ public class IngresarPedidoManager {
         consulta = new Consultas();
         java.util.Calendar cal = java.util.Calendar.getInstance();
         java.util.Date utilDate = cal.getTime();
-        ordenPedido = new OrdenPedido(new Date(utilDate.getTime()));
+        ordenPedido = new OrdenPedido(new Timestamp(utilDate.getTime()));
     }
 
 
@@ -65,6 +69,10 @@ public class IngresarPedidoManager {
         }
     }
 
+    /*public String getSubtotal(){
+        return "TODO";
+    }*/
+
     public OrdenPedido getOrdenPedido(){
         return ordenPedido;
     }
@@ -73,7 +81,12 @@ public class IngresarPedidoManager {
         return ordenPedido.getArrayDetalles();
     }
 
-    public boolean guardarOrdenPedido(String cliente, OrdenPedido orden, String vendedor){
+    public int guardarOrdenPedido(String cliente, OrdenPedido orden, String vendedor){
         return consulta.coordinatedInsertOP(cliente, orden, vendedor);
+    }
+
+    public String getSubtotal(){
+        DecimalFormat df = new DecimalFormat("#,###,##0.00");
+        return df.format(ordenPedido.getSubTotal());
     }
 }

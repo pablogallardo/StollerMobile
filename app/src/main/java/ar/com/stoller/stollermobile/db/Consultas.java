@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
@@ -290,7 +291,7 @@ public class Consultas {
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setLong(1, getIdCliente(cliente));
         stmt.setString(2, orden.getOrdenCompra());
-        stmt.setDate(3, orden.getFecha());
+        stmt.setTimestamp(3, orden.getFecha());
         stmt.setInt(4, getIdListaPrecios(orden.getListaPrecios()));
         stmt.setString(5, orden.getCreadoPor());
         stmt.setDate(6, getActualDate());
@@ -368,7 +369,7 @@ public class Consultas {
         stmt.executeUpdate();
     }
 
-    public boolean coordinatedInsertOP(String cliente, OrdenPedido orden, String vendedor) {
+    public int coordinatedInsertOP(String cliente, OrdenPedido orden, String vendedor) {
         try {
             connection.setAutoCommit(false);
             insertarOrdenPedido(cliente, orden, vendedor);
@@ -379,10 +380,10 @@ public class Consultas {
             }
             connection.commit();
             connection.setAutoCommit(true);
-            return true;
+            return idOP;
         } catch (SQLException e){
             e.printStackTrace();
-            return false;
+            return -1;
         }
     }
 
@@ -415,6 +416,16 @@ public class Consultas {
             return null;
         }
         return reset;
+    }
+
+    public OrdenPedido getOrdenPedido(int id){
+        //TODO
+        return null;
+    }
+
+    private ArrayList<DetalleOrdenPedido> getDetalles(int id){
+        //TODO
+        return null;
     }
 
 

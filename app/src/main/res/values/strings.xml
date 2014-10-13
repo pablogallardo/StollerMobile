@@ -20,6 +20,7 @@
     <string name="order">Orden de compra:</string>
     <string name="pricing_list">Lista de precios:</string>
     <string name="unit_price">Precio unitario:</string>
+    <string name="subtotal">Subtotal:</string>
 
     <string-array name="clientes_context_menu">
         <item>Ingresar Orden de Pedido</item>

@@ -1,6 +1,7 @@
 package ar.com.stoller.stollermobile.objects;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.Iterator;
@@ -11,20 +12,21 @@ import java.util.Iterator;
 public class OrdenPedido implements Serializable{
 
     private String ordenCompra;
-    private Date fecha;
+    private Timestamp fecha;
     private String listaPrecios;
     private String divisa;
     private String estado;
     private String direccionFacturacion;
     private ArrayList<DetalleOrdenPedido> detalle;
     private String creadoPor;
+    private int id;
 
     public OrdenPedido(String ordenCompra, String listaPrecios, String divisa,
                        String estado, String direccionFacturacion) {
         java.util.Calendar cal = java.util.Calendar.getInstance();
         java.util.Date utilDate = cal.getTime();
         this.ordenCompra = ordenCompra;
-        this.fecha = new Date(utilDate.getTime());
+        this.fecha = new Timestamp(utilDate.getTime());
         this.listaPrecios = listaPrecios;
         this.divisa = divisa;
         this.estado = estado;
@@ -32,10 +34,9 @@ public class OrdenPedido implements Serializable{
         detalle = new ArrayList<DetalleOrdenPedido>();
     }
 
-    public OrdenPedido(Date fecha){
+    public OrdenPedido(Timestamp fecha){
         this.fecha = fecha;
         detalle = new ArrayList<DetalleOrdenPedido>();
-        //detalle.add(new DetalleOrdenPedido("producto","test","5000","test","test","test"));
     }
 
     public String getOrdenCompra() {
@@ -46,11 +47,11 @@ public class OrdenPedido implements Serializable{
         this.ordenCompra = ordenCompra;
     }
 
-    public Date getFecha() {
+    public Timestamp getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(Timestamp fecha) {
         this.fecha = fecha;
     }
 
@@ -102,6 +103,14 @@ public class OrdenPedido implements Serializable{
         this.detalle = detalle;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void agregarDetalle(String producto, float precioUnitario, int cantidad,
                                Date fechaEnvio, int nroLinea, String direccionEnvio){
         detalle.add(new DetalleOrdenPedido(producto, precioUnitario, cantidad, fechaEnvio,
@@ -119,6 +128,16 @@ public class OrdenPedido implements Serializable{
             s.add(i.next().toArray());
         }
         return s;
+    }
+
+    public float getSubTotal(){
+        Iterator<DetalleOrdenPedido> i = detalle.iterator();
+        float subtotal = 0;
+        while(i.hasNext()){
+            DetalleOrdenPedido d = i.next();
+            subtotal += d.getPrecioUnitario() * d.getCantidad();
+        }
+        return subtotal;
     }
 
 

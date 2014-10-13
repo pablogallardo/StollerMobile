@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import ar.com.stoller.stollermobile.R;
@@ -96,7 +97,8 @@ public abstract class SeleccionarProducto extends Activity {
                     try{
                       okPress();
                     } catch (NumberFormatException e){
-                    Toast.makeText(getApplicationContext(),
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(),
                             "Por favor, ingrese una cantidad válida.",
                             Toast.LENGTH_LONG).show();
                 }
@@ -153,7 +155,8 @@ public abstract class SeleccionarProducto extends Activity {
                 showToastProductoInvalido();
             } else {
                 um.setText(result);
-                precio.setText(""+precioLista);
+                DecimalFormat df = new DecimalFormat("#,###,##0.00");
+                precio.setText(df.format(precioLista));
                 sentinela = true;
             }
         }
