@@ -14,8 +14,10 @@ public class VerPedidosManager {
     private String cliente;
     private ArrayList<String> pedidos;
     private Consultas consulta;
+
     public VerPedidosManager(String cliente){
         this.cliente = cliente;
+        consulta = new Consultas();
         pedidos = new ArrayList<String>();
     }
 

@@ -22,7 +22,8 @@ public class OrdenPedido implements Serializable{
     private int id;
 
     public OrdenPedido(String ordenCompra, String listaPrecios, String divisa,
-                       String estado, String direccionFacturacion) {
+                       String estado, String direccionFacturacion, Timestamp fecha, int id,
+                       ArrayList<DetalleOrdenPedido> detalle) {
         java.util.Calendar cal = java.util.Calendar.getInstance();
         java.util.Date utilDate = cal.getTime();
         this.ordenCompra = ordenCompra;
@@ -31,7 +32,9 @@ public class OrdenPedido implements Serializable{
         this.divisa = divisa;
         this.estado = estado;
         this.direccionFacturacion = direccionFacturacion;
-        detalle = new ArrayList<DetalleOrdenPedido>();
+        this.detalle = detalle;
+        this.fecha = fecha;
+        this.id = id;
     }
 
     public OrdenPedido(Timestamp fecha){

@@ -48,6 +48,10 @@
             android:name=".VerPedidos"
             android:label="@string/title_activity_ver_pedidos" >
         </activity>
+        <activity
+            android:name=".ShowPedido"
+            android:label="@string/title_activity_show_pedido" >
+        </activity>
     </application>
 
 </manifest>

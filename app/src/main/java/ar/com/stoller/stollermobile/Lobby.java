@@ -97,6 +97,9 @@ public class Lobby extends Activity {
                 break;
             }
             case 1:{
+                intent = new Intent(this,VerPedidos.class);
+                intent.putExtra("clienteseleccionado", listItemName);
+                startActivity(intent);
                 break;
             }
             case 2:{

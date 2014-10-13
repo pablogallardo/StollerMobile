@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -287,7 +288,7 @@ public class Consultas {
             throws SQLException {
         String sql = "Insert into OrdenPedido (cliente, idtermino, ordencompra, fechaordenpedido," +
                 "idlistaprecios, iddivisa, idestado, creadopor, fechacreacion, " +
-                "iddireccionfacturacion, vendedor) values (?, 1, ?, ?, ?, 1, 1, ?, ?, ?, ?)";
+                "iddireccionfacturacion, vendedor) values (?, 1, ?, ?, ?, 1, 2, ?, ?, ?, ?)";
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setLong(1, getIdCliente(cliente));
         stmt.setString(2, orden.getOrdenCompra());
@@ -418,16 +419,96 @@ public class Consultas {
         return reset;
     }
 
+
     public OrdenPedido getOrdenPedido(int id){
-        //TODO
-        return null;
+        String query = "Select * from ordenpedido where idordenpedido = ?";
+        OrdenPedido ordenPedido = null;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet reset = stmt.executeQuery();
+            reset.next();
+            String ordenCompra = reset.getString("ordencompra");
+            Timestamp fecha = reset.getTimestamp("fechaordenpedido");
+            String listaPrecios = getListaPrecios(reset.getInt("idlistaprecios"));
+            String divisa = reset.getString("iddivisa");
+            String estado = reset.getString("idestado");
+            String direccionFacturacion = getDireccion(reset.getInt("iddireccionfacturacion"), 1);
+            ArrayList<DetalleOrdenPedido> detalle = getDetalles(id);
+            String creadoPor = reset.getString("creadopor");
+            int idOP = id;
+            ordenPedido = new OrdenPedido(ordenCompra,listaPrecios,divisa,estado,
+                    direccionFacturacion,fecha, idOP, detalle);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ordenPedido;
     }
 
     private ArrayList<DetalleOrdenPedido> getDetalles(int id){
-        //TODO
-        return null;
+        String query = "Select * from detalleordenpedido where idordenpedido = ?";
+        ArrayList<DetalleOrdenPedido> dop = new ArrayList<DetalleOrdenPedido>();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet reset = stmt.executeQuery();
+            while(reset.next()){
+                String producto = getProducto(reset.getInt("iditem"));
+                float precioUnitario = reset.getFloat("preciou");
+                int cantidad = reset.getInt("cantidad");
+                Date fechaEnvio = reset.getDate("fechaenvio");
+                int nroLinea = reset.getInt("nrolinea");
+                String direccionEnvio = getDireccion(reset.getInt("iddireccionenvio"), 2);
+                dop.add(new DetalleOrdenPedido(producto,precioUnitario,cantidad, fechaEnvio,
+                        nroLinea, direccionEnvio));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dop;
     }
 
+    private String getProducto(int id){
+        String query = "Select * from item where idtem = ?";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet reset = stmt.executeQuery();
+            reset.next();
+            return reset.getString("nombre");
+        } catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    private String getDireccion(int id, int tipo){
+        String query = "Select * from direccion where iddireccion = ? and idtipodireccion = ?";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, id);
+            stmt.setInt(2, tipo);
+            ResultSet reset = stmt.executeQuery();
+            reset.next();
+            return reset.getString("domicilio");
+        } catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String getListaPrecios(int id){
+        String query = "Select * from listaprecios where idlistaprecios = ?";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet reset = stmt.executeQuery();
+            reset.next();
+            return reset.getString("nombre");
+        } catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }
