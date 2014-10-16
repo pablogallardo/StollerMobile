@@ -171,7 +171,7 @@ public class Consultas {
         ResultSet reset;
         try {
             stmt = connection.createStatement();
-            String query = "Select * from item where nombre = '" + producto + "'";
+            String query = "Select * from item where nombre = '" + producto.replace("'","''") + "'";
             reset = stmt.executeQuery(query);
         } catch (SQLException e) {
 
