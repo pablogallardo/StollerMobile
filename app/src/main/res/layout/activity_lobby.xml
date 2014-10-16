@@ -14,16 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <QuickContactBadge
-            android:id="@+id/quickContactBadge1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/stoller_logo" />
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/logo_l" />
 
     </LinearLayout>
     <RelativeLayout

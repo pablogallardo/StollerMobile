@@ -1,6 +1,7 @@
 package ar.com.stoller.stollermobile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.logging.SocketHandler;
 
 import ar.com.stoller.stollermobile.app.VerPedidosManager;
 
@@ -21,6 +23,7 @@ public class VerPedidos extends Activity {
     private ListView pedidos;
     private VerPedidosManager manager;
     private String cliente;
+    private ArrayAdapter<String> aaPedidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class VerPedidos extends Activity {
         cliente = b.getString("clienteseleccionado");
         manager = new VerPedidosManager(cliente);
         new PopulatePedidos().execute();
+        onItemClick();
     }
 
 
@@ -58,7 +62,9 @@ public class VerPedidos extends Activity {
         pedidos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //TODO
+                Intent intent = new Intent(getApplicationContext(), ShowPedido.class);
+                intent.putExtra("idOP", Integer.parseInt(aaPedidos.getItem(i)));
+                startActivity(intent);
             }
         });
     }
@@ -71,9 +77,9 @@ public class VerPedidos extends Activity {
 
         @Override
         protected void onPostExecute(ArrayList<String> strings) {
-            ArrayAdapter<String> aa = new ArrayAdapter<String>(getApplicationContext(),
+            aaPedidos = new ArrayAdapter<String>(getApplicationContext(),
                     R.layout.clientesview, strings);
-            pedidos.setAdapter(aa);
+            pedidos.setAdapter(aaPedidos);
         }
     }
 

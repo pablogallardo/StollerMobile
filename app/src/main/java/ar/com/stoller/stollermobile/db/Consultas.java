@@ -273,7 +273,7 @@ public class Consultas {
         int id;
         try {
             stmt = connection.createStatement();
-            String query = "Select * from item where nombre = '" + producto + "'";
+            String query = "Select * from item where nombre = '" + producto.replace("'","''") + "'";
             reset = stmt.executeQuery(query);
             reset.next();
             id = reset.getInt("iditem");
