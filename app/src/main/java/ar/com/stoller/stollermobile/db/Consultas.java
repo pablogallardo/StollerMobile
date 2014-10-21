@@ -288,16 +288,17 @@ public class Consultas {
             throws SQLException {
         String sql = "Insert into OrdenPedido (cliente, idtermino, ordencompra, fechaordenpedido," +
                 "idlistaprecios, iddivisa, idestado, creadopor, fechacreacion, " +
-                "iddireccionfacturacion, vendedor) values (?, 1, ?, ?, ?, 1, 2, ?, ?, ?, ?)";
+                "iddireccionfacturacion, vendedor) values (?, 1, ?, ?, ?, 1, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setLong(1, getIdCliente(cliente));
         stmt.setString(2, orden.getOrdenCompra());
         stmt.setTimestamp(3, orden.getFecha());
         stmt.setInt(4, getIdListaPrecios(orden.getListaPrecios()));
-        stmt.setString(5, orden.getCreadoPor());
-        stmt.setDate(6, getActualDate());
-        stmt.setInt(7, getIdDireccion(getIdCliente(cliente), orden.getDireccionFacturacion(), 1));
-        stmt.setInt(8, getIdATC(vendedor));
+        stmt.setInt(5, getIdEstadoOrdenPedido(orden.getEstado()));
+        stmt.setString(6, orden.getCreadoPor());
+        stmt.setDate(7, getActualDate());
+        stmt.setInt(8, getIdDireccion(getIdCliente(cliente), orden.getDireccionFacturacion(), 1));
+        stmt.setInt(9, getIdATC(vendedor));
         stmt.executeUpdate();
     }
 
@@ -432,7 +433,7 @@ public class Consultas {
             Timestamp fecha = reset.getTimestamp("fechaordenpedido");
             String listaPrecios = getListaPrecios(reset.getInt("idlistaprecios"));
             String divisa = reset.getString("iddivisa");
-            String estado = reset.getString("idestado");
+            String estado = getEstadoOrdenPedido(reset.getInt("idestado"));
             String direccionFacturacion = getDireccion(reset.getInt("iddireccionfacturacion"), 1);
             ArrayList<DetalleOrdenPedido> detalle = getDetalles(id);
             String creadoPor = reset.getString("creadopor");
@@ -443,6 +444,17 @@ public class Consultas {
             e.printStackTrace();
         }
         return ordenPedido;
+    }
+
+    public ResultSet getEstadosOrdenPedido(){
+        String query = "Select * from estadoordenpedido where idestadoordenpedido IN (1, 2, 3, 5)";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            return stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private ArrayList<DetalleOrdenPedido> getDetalles(int id){
@@ -469,7 +481,7 @@ public class Consultas {
     }
 
     private String getProducto(int id){
-        String query = "Select * from item where idtem = ?";
+        String query = "Select * from item where iditem = ?";
         try{
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, id);
@@ -510,5 +522,24 @@ public class Consultas {
             return null;
         }
     }
+
+    private int getIdEstadoOrdenPedido(String estadoNombre) throws SQLException {
+        String query = "Select * from estadoordenpedido where nombre = ?";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, estadoNombre);
+        ResultSet reset = stmt.executeQuery();
+        reset.next();
+        return reset.getInt("idestadoordenpedido");
+    }
+
+    private String getEstadoOrdenPedido(int id) throws SQLException{
+        String query = "Select * from estadoordenpedido where idestadoordenpedido = ?";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setInt(1, id);
+        ResultSet reset = stmt.executeQuery();
+        reset.next();
+        return reset.getString("nombre");
+    }
+
 
 }

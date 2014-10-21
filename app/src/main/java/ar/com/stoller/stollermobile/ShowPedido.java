@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 
 import ar.com.stoller.stollermobile.R;
 import ar.com.stoller.stollermobile.app.ShowPedidoManager;
+import ar.com.stoller.stollermobile.app.StockAdapter;
 
 public class ShowPedido extends ActionBarActivity {
     private int idOP;
@@ -26,7 +28,7 @@ public class ShowPedido extends ActionBarActivity {
     private Spinner listaPrecios;
     private EditText ordenCompra;
     private TextView subtotal;
-    private LinearLayout buttons;
+    private ListView productos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class ShowPedido extends ActionBarActivity {
         deactivateAll();
         Bundle b = getIntent().getExtras();
         idOP = b.getInt("idOP");
-
+        setTitle("Pedido #" + idOP);
         new SetAll().execute();
     }
 
@@ -67,7 +69,7 @@ public class ShowPedido extends ActionBarActivity {
         listaPrecios = (Spinner)findViewById(R.id.sp_priceList);
         ordenCompra = (EditText)findViewById(R.id.buyOrder);
         subtotal = (TextView)findViewById(R.id.subtotal);
-        buttons = (LinearLayout)findViewById(R.id.buttons_layout);
+        productos = (ListView)findViewById(R.id.productos);
     }
 
     private void deactivateAll(){
@@ -77,7 +79,6 @@ public class ShowPedido extends ActionBarActivity {
         listaPrecios.setActivated(false);
         ordenCompra.setActivated(false);
         subtotal.setActivated(false);
-        buttons.setVisibility(View.GONE);
     }
 
     private class SetAll extends AsyncTask<Void, Void, Void>{
@@ -87,19 +88,21 @@ public class ShowPedido extends ActionBarActivity {
         private String ordenCompradb;
         private String subtotaldb;
 
+
         @Override
         protected Void doInBackground(Void... voids) {
             manager = new ShowPedidoManager(idOP);
-            s[0] = manager.getListaPrecio();
-            s1[0] = manager.getDireccion();
-            fechadb = " " + manager.getFecha().toString();
-            ordenCompradb = manager.getOrdenCompra();
-            subtotaldb = " " + manager.getSubtotal();
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            s[0] = manager.getListaPrecio();
+            s1[0] = manager.getDireccion();
+            fechadb = " " + manager.getFecha();
+            ordenCompradb = manager.getOrdenCompra();
+            subtotaldb = " " + manager.getSubtotal();
             ArrayAdapter<String> aa = new ArrayAdapter<String>(getApplicationContext(), R.layout.pedidos_view, s);
             listaPrecios.setAdapter(aa);
             ArrayAdapter<String> aa1 = new ArrayAdapter<String>(getApplicationContext(), R.layout.pedidos_view, s1);
@@ -107,6 +110,8 @@ public class ShowPedido extends ActionBarActivity {
             fecha.setText(fechadb);
             ordenCompra.setText(ordenCompradb);
             subtotal.setText(subtotaldb);
+            StockAdapter sa = new StockAdapter(getApplicationContext(), manager.getDetalles());
+            productos.setAdapter(sa);
         }
     }
 }

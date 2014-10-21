@@ -1,6 +1,8 @@
 package ar.com.stoller.stollermobile.app;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import ar.com.stoller.stollermobile.db.Consultas;
 import ar.com.stoller.stollermobile.objects.OrdenPedido;
@@ -28,8 +30,8 @@ public class ShowPedidoManager {
         return orden.getDireccionFacturacion();
     }
 
-    public Timestamp getFecha(){
-        return orden.getFecha();
+    public String getFecha(){
+        return new SimpleDateFormat("dd/MM/yyyy").format(orden.getFecha());
     }
 
     public String getListaPrecio(){
@@ -42,6 +44,10 @@ public class ShowPedidoManager {
 
     public float getSubtotal(){
         return orden.getSubTotal();
+    }
+
+    public ArrayList<String[]> getDetalles(){
+        return orden.getArrayDetalles();
     }
 
 }

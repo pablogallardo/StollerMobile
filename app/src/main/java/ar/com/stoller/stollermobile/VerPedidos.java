@@ -62,7 +62,9 @@ public class VerPedidos extends Activity {
         pedidos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(), ShowPedido.class);
+                Intent intent = new Intent(getApplicationContext(), IngresarPedido.class);
+                intent.putExtra("clienteseleccionado", cliente);
+                intent.putExtra("usuariovendedor", "hgomez");
                 intent.putExtra("idOP", Integer.parseInt(aaPedidos.getItem(i)));
                 startActivity(intent);
             }

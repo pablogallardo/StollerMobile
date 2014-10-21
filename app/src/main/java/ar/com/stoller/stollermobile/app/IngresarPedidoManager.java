@@ -69,10 +69,6 @@ public class IngresarPedidoManager {
         }
     }
 
-    /*public String getSubtotal(){
-        return "TODO";
-    }*/
-
     public OrdenPedido getOrdenPedido(){
         return ordenPedido;
     }
@@ -88,5 +84,23 @@ public class IngresarPedidoManager {
     public String getSubtotal(){
         DecimalFormat df = new DecimalFormat("#,###,##0.00");
         return df.format(ordenPedido.getSubTotal());
+    }
+
+    public ArrayList<String> getEstadosOrdenPedido(){
+        ArrayList<String> array = new ArrayList<String>();
+        ResultSet reset = consulta.getEstadosOrdenPedido();
+        try {
+            while(reset.next()){
+                array.add(reset.getString("nombre"));
+            }
+            return array;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void setOrdenPedido(int idOP){
+        ordenPedido = consulta.getOrdenPedido(idOP);
     }
 }

@@ -30,6 +30,7 @@ import ar.com.stoller.stollermobile.objects.OrdenPedido;
 
 public class IngresarPedido extends Activity{
 
+    private int idOP;
     private TextView fecha;
     private Spinner direccion;
     private Spinner divisa;
@@ -42,6 +43,11 @@ public class IngresarPedido extends Activity{
     private String cliente;
     private Button buttonSave;
     private TextView subtotal;
+    private Spinner estados;
+    private boolean aModificar = false;
+    private ArrayAdapter<String> direccionaa;
+    private ArrayAdapter<String> listaaa;
+    private ArrayAdapter<String> estadoaa;
 
 
     @Override
@@ -56,11 +62,17 @@ public class IngresarPedido extends Activity{
         fecha.setText(" " + new SimpleDateFormat("dd/MM/yyyy").format(manager.getOrdenPedido().getFecha()));
         new PopulateDireccion().execute();
         new PopulateListaPrecio().execute();
+        new PopulateStates().execute();
         populateProductos();
         addButonListener();
         saveButtonListener();
         ordenLongClick();
         setSubtotal();
+        idOP = b.getInt("idOP");
+        if(idOP != 0){
+            aModificar = true;
+            new SelectEverything().execute();
+        }
     }
 
     @Override
@@ -92,6 +104,7 @@ public class IngresarPedido extends Activity{
         buttonAdd = (Button)findViewById(R.id.buttonAdd);
         productos = (ListView)findViewById(R.id.productos);
         buttonSave = (Button)findViewById(R.id.buttonSave);
+        estados = (Spinner)findViewById(R.id.state);
     }
 
     private void populateProductos(){
@@ -120,7 +133,7 @@ public class IngresarPedido extends Activity{
                 OrdenPedido op = manager.getOrdenPedido();
                 op.setDireccionFacturacion(direccion.getSelectedItem().toString());
                 op.setDivisa("USD");
-                op.setEstado("Ingresado");
+                op.setEstado(estados.getSelectedItem().toString());
                 op.setListaPrecios(listaPrecios.getSelectedItem().toString());
                 op.setOrdenCompra(ordenCompra.getText().toString());
                 op.setCreadoPor(usuario);
@@ -137,9 +150,9 @@ public class IngresarPedido extends Activity{
 
         @Override
         protected void onPostExecute(ArrayList<String> list) {
-            ArrayAdapter<String> aa = new ArrayAdapter<String>(getApplicationContext(),
+            direccionaa = new ArrayAdapter<String>(getApplicationContext(),
                     R.layout.pedidos_view, list);
-            direccion.setAdapter(aa);
+            direccion.setAdapter(direccionaa);
         }
     }
     private class PopulateListaPrecio extends AsyncTask<String, Void, ArrayList<String>> {
@@ -150,9 +163,9 @@ public class IngresarPedido extends Activity{
 
         @Override
         protected void onPostExecute(ArrayList<String> list) {
-            ArrayAdapter<String> aa = new ArrayAdapter<String>(getApplicationContext(),
+            listaaa = new ArrayAdapter<String>(getApplicationContext(),
                     R.layout.pedidos_view, list);
-            listaPrecios.setAdapter(aa);
+            listaPrecios.setAdapter(listaaa);
         }
     }
 
@@ -228,8 +241,41 @@ public class IngresarPedido extends Activity{
         }
     }
 
+    private class PopulateStates extends AsyncTask<Void, Void, ArrayList<String>>{
+        @Override
+        protected ArrayList<String> doInBackground(Void... voids) {
+            return manager.getEstadosOrdenPedido();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> list) {
+            estadoaa = new ArrayAdapter<String>(getApplicationContext(),
+                    R.layout.pedidos_view, list);
+            estados.setAdapter(estadoaa);
+        }
+    }
+
     private void setSubtotal(){
         subtotal.setText(" " + manager.getSubtotal());
+    }
+
+    private class SelectEverything extends AsyncTask<Void, Void, OrdenPedido>{
+        @Override
+        protected OrdenPedido doInBackground(Void... voids) {
+            manager.setOrdenPedido(idOP);
+            return manager.getOrdenPedido();
+        }
+
+        @Override
+        protected void onPostExecute(OrdenPedido orden) {
+            direccion.setSelection(direccionaa.getPosition(orden.getDireccionFacturacion()));
+            listaPrecios.setSelection(listaaa.getPosition(orden.getListaPrecios()));
+            estados.setSelection(estadoaa.getPosition(orden.getEstado()));
+            ordenCompra.setText(orden.getOrdenCompra());
+            fecha.setText(" " + new SimpleDateFormat("dd/MM/yyyy").format(manager.getOrdenPedido().getFecha()));
+            populateProductos();
+            setSubtotal();
+        }
     }
 
 

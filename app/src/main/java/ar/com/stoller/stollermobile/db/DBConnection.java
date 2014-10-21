@@ -11,7 +11,7 @@ import java.sql.DriverManager;
 public class DBConnection {
 
     private static DBConnection instance = null;
-    private static final String URL="jdbc:jtds:sqlserver://10.0.0.103;instance=SQLEXPRESS;" +
+    private static final String URL="jdbc:jtds:sqlserver://10.0.0.107;instance=SQLEXPRESS;" +
             "databaseName=SOBDD;integratedSecurity=true;";
     //private static final String URL="jdbc:jtds:sqlserver://172.16.185.128:1433/SOBDD;";
     //private static final String URL="jdbc:jtds:sqlserver://192.168.0.103:1433/SOBDD;";
