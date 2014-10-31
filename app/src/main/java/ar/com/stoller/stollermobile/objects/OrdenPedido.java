@@ -20,6 +20,7 @@ public class OrdenPedido implements Serializable{
     private ArrayList<DetalleOrdenPedido> detalle;
     private String creadoPor;
     private int id;
+    private String modificadoPor;
 
     public OrdenPedido(String ordenCompra, String listaPrecios, String divisa,
                        String estado, String direccionFacturacion, Timestamp fecha, int id,
@@ -114,10 +115,33 @@ public class OrdenPedido implements Serializable{
         this.id = id;
     }
 
+    public String getModificadoPor() {
+        return modificadoPor;
+    }
+
+    public void setModificadoPor(String modificadoPor) {
+        this.modificadoPor = modificadoPor;
+    }
+
     public void agregarDetalle(String producto, float precioUnitario, int cantidad,
                                Date fechaEnvio, int nroLinea, String direccionEnvio){
         detalle.add(new DetalleOrdenPedido(producto, precioUnitario, cantidad, fechaEnvio,
                 nroLinea, direccionEnvio));
+    }
+
+    public void modificarDetalle(String producto, float precioUnitario, int cantidad,
+                                 Date fechaEnvio, int nroLinea, String direccionEnvio){
+        Iterator<DetalleOrdenPedido> i = detalle.iterator();
+        while(i.hasNext()){
+            DetalleOrdenPedido d = i.next();
+            if(d.getNroLinea() == nroLinea){
+                d.setProducto(producto);
+                d.setPrecioUnitario(precioUnitario);
+                d.setCantidad(cantidad);
+                d.setFechaEnvio(fechaEnvio);
+                d.setDireccionEnvio(direccionEnvio);
+            }
+        }
     }
 
     public void removeDetalle(int position){
@@ -143,5 +167,15 @@ public class OrdenPedido implements Serializable{
         return subtotal;
     }
 
+    public DetalleOrdenPedido getDetalle(int nroLinea){
+        Iterator<DetalleOrdenPedido> i = detalle.iterator();
+        while(i.hasNext()){
+            DetalleOrdenPedido d = i.next();
+            if(d.getNroLinea() == nroLinea)return d;
+            }
+        return null;
+        }
+    }
 
-}
+
+

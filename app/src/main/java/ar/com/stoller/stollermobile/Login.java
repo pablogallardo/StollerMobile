@@ -15,12 +15,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import ar.com.stoller.stollermobile.db.Consultas;
+import ar.com.stoller.stollermobile.db.DBConfiguracion;
+import ar.com.stoller.stollermobile.db.DBConnection;
 
 
 public class Login extends Activity {
     private Button ingresar;
     private EditText user;
     private EditText pass;
+    private Consultas c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,7 @@ public class Login extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        c = new Consultas();
         ingresar = (Button) findViewById(R.id.sendbtn);
         user = (EditText) findViewById(R.id.useret);
         pass = (EditText) findViewById(R.id.passwdet);
@@ -69,8 +73,11 @@ public class Login extends Activity {
 
         @Override
         public String doInBackground(String... params) {
-            Consultas c = new Consultas();
-
+            DBConfiguracion dbconfig = new DBConfiguracion(getApplicationContext());
+            String [] s = dbconfig.getConfiguracion();
+            DBConnection.HOST = s[0];
+            DBConnection.USER = s[1];
+            DBConnection.PASS = s[2];
             return c.login(params[0], params[1]);
         }
 
@@ -89,7 +96,6 @@ public class Login extends Activity {
                     Intent intent = new Intent(getApplicationContext(), Lobby.class);
                     intent.putExtra("Usuario", user.getText().toString());
                     intent.putExtra("razonsocial", result);
-
                     startActivity(intent);
                     finish();
                 }

@@ -296,16 +296,16 @@ public class Consultas {
         stmt.setInt(4, getIdListaPrecios(orden.getListaPrecios()));
         stmt.setInt(5, getIdEstadoOrdenPedido(orden.getEstado()));
         stmt.setString(6, orden.getCreadoPor());
-        stmt.setDate(7, getActualDate());
+        stmt.setTimestamp(7, getActualDate());
         stmt.setInt(8, getIdDireccion(getIdCliente(cliente), orden.getDireccionFacturacion(), 1));
         stmt.setInt(9, getIdATC(vendedor));
         stmt.executeUpdate();
     }
 
-    private Date getActualDate(){
+    private Timestamp getActualDate(){
         Calendar cal = Calendar.getInstance();
         java.util.Date dateUtil = cal.getTime();
-        return new Date(dateUtil.getTime());
+        return new Timestamp(dateUtil.getTime());
     }
 
 
@@ -352,12 +352,13 @@ public class Consultas {
         return reset.getInt("ID");
     }
 
-    private void insertarDetallePedido(String cliente,DetalleOrdenPedido detalle, String creadoPort,
-                                       int idOP)
+    private void insertarDetallePedido(String cliente,DetalleOrdenPedido detalle, String creadoPor,
+                                       String modificadoPor, int idOP)
             throws SQLException {
         String sql = "INSERT INTO DetalleOrdenPedido (iditem, preciou, cantidad, nrolinea, " +
-                "iddireccionenvio, fechaenvio, idestado, creadopor, fechacreacion, idordenpedido) " +
-                "values (?, ?, ?, ?, ?, ?, 1, ?, ?, ?)";
+                "iddireccionenvio, fechaenvio, idestado, creadopor, fechacreacion, idordenpedido, " +
+                "modificadopor, fechamodificacion) " +
+                "values (?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setInt(1, getIdProducto(detalle.getProducto()));
         stmt.setFloat(2, detalle.getPrecioUnitario());
@@ -365,9 +366,16 @@ public class Consultas {
         stmt.setInt(4, detalle.getNroLinea());
         stmt.setInt(5, getIdDireccion(getIdCliente(cliente), detalle.getDireccionEnvio(), 2));
         stmt.setDate(6, detalle.getFechaEnvio());
-        stmt.setString(7, creadoPort);
-        stmt.setDate(8, getActualDate());
+        stmt.setString(7, creadoPor);
+        stmt.setTimestamp(8, getActualDate());
         stmt.setInt(9, idOP);
+        if(modificadoPor == null){
+            stmt.setString(10, null);
+            stmt.setDate(11, null);
+        } else {
+            stmt.setString(10, modificadoPor);
+            stmt.setTimestamp(11, getActualDate());
+        }
         stmt.executeUpdate();
     }
 
@@ -378,7 +386,7 @@ public class Consultas {
             Iterator<DetalleOrdenPedido> iterador = orden.getDetalle().iterator();
             int idOP = getLastID();
             while (iterador.hasNext()) {
-                insertarDetallePedido(cliente, iterador.next(), orden.getCreadoPor(), idOP);
+                insertarDetallePedido(cliente, iterador.next(), orden.getCreadoPor(),null, idOP);
             }
             connection.commit();
             connection.setAutoCommit(true);
@@ -394,7 +402,8 @@ public class Consultas {
         ResultSet reset;
         try {
             stmt = connection.createStatement();
-            String query = "Select * from OrdenPedido where cliente = '" + getIdCliente(cliente) + "'";
+            String query = "Select * from OrdenPedido where cliente = '" + getIdCliente(cliente)+
+                    "' AND idestado IN (1, 2, 3, 7)";
             reset = stmt.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -531,7 +540,6 @@ public class Consultas {
         reset.next();
         return reset.getInt("idestadoordenpedido");
     }
-
     private String getEstadoOrdenPedido(int id) throws SQLException{
         String query = "Select * from estadoordenpedido where idestadoordenpedido = ?";
         PreparedStatement stmt = connection.prepareStatement(query);
@@ -541,5 +549,66 @@ public class Consultas {
         return reset.getString("nombre");
     }
 
+    private void actualizarOrdenPedido(String cliente, OrdenPedido orden, String vendedor)
+            throws SQLException{
+        String sql = "update ordenpedido set cliente = ?, idtermino = ?, ordencompra = ?, " +
+                "fechaordenpedido = ?, idlistaprecios = ?, iddivisa = ?, idestado = ?, " +
+                "modificadopor = ?, fechamodificacion = ?, iddireccionfacturacion = ?, " +
+                "vendedor = ? where idordenpedido = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setLong(1, getIdCliente(cliente));
+            stmt.setInt(2, 1);
+            stmt.setString(3, orden.getOrdenCompra());
+            stmt.setTimestamp(4, orden.getFecha());
+            stmt.setInt(5, getIdListaPrecios(orden.getListaPrecios()));
+            stmt.setInt(6, 1);
+            stmt.setInt(7, getIdEstadoOrdenPedido(orden.getEstado()));
+            stmt.setString(8, orden.getModificadoPor());
+            stmt.setTimestamp(9, getActualDate());
+            stmt.setInt(10, getIdDireccion(getIdCliente(cliente),
+                    orden.getDireccionFacturacion(), 1));
+            stmt.setInt(11, getIdATC(vendedor));
+            stmt.setInt(12, orden.getId());
+            stmt.executeUpdate();
+    }
+
+    private void eliminarDetalleOrdenPedido(OrdenPedido orden) throws SQLException{
+        String delete = "delete from detalleordenpedido where idordenpedido = ?";
+            PreparedStatement stmt = connection.prepareStatement(delete);
+            stmt.setInt(1, orden.getId());
+            stmt.executeUpdate();
+    }
+
+    public boolean coordinatedUpdateOP(String cliente, OrdenPedido orden, String vendedor){
+        try {
+            connection.setAutoCommit(false);
+            actualizarOrdenPedido(cliente, orden, vendedor);
+            eliminarDetalleOrdenPedido(orden);
+            Iterator<DetalleOrdenPedido> i = orden.getDetalle().iterator();
+            while(i.hasNext()){
+                insertarDetallePedido(cliente, i.next(), orden.getCreadoPor(),
+                        orden.getModificadoPor(), orden.getId());
+            }
+            connection.commit();
+            connection.setAutoCommit(true);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public ResultSet getClienteInfo(String cliente){
+        String query = "select * from cliente c join usuario u on c.cliente = u.usuario " +
+                "where c.razonsocial = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, cliente);
+            return stmt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }

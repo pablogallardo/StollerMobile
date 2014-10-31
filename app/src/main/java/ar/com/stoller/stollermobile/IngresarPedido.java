@@ -48,6 +48,7 @@ public class IngresarPedido extends Activity{
     private ArrayAdapter<String> direccionaa;
     private ArrayAdapter<String> listaaa;
     private ArrayAdapter<String> estadoaa;
+    private boolean estaConfirmada = false;
 
 
     @Override
@@ -56,6 +57,7 @@ public class IngresarPedido extends Activity{
         setContentView(R.layout.activity_ingresar_pedido);
         Bundle b = getIntent().getExtras();
         cliente = b.getString("clienteseleccionado");
+        setTitle(cliente);
         usuario = b.getString("usuariovendedor");
         manager = new IngresarPedidoManager(cliente);
         instantiateObjectView();
@@ -73,6 +75,7 @@ public class IngresarPedido extends Activity{
             aModificar = true;
             new SelectEverything().execute();
         }
+        onProductoClickListener();
     }
 
     @Override
@@ -136,7 +139,11 @@ public class IngresarPedido extends Activity{
                 op.setEstado(estados.getSelectedItem().toString());
                 op.setListaPrecios(listaPrecios.getSelectedItem().toString());
                 op.setOrdenCompra(ordenCompra.getText().toString());
-                op.setCreadoPor(usuario);
+                if(aModificar){
+                    op.setModificadoPor(usuario);
+                } else {
+                    op.setCreadoPor(usuario);
+                }
                 new SaveOrdenPedido().execute();
             }
         });
@@ -222,17 +229,46 @@ public class IngresarPedido extends Activity{
         }
     }
 
+    private void onProductoClickListener(){
+        productos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getApplicationContext(),
+                        SeleccionarProductoOrdenPedido.class);
+                intent.putExtra("OrdenPedido", manager.getOrdenPedido());
+                intent.putExtra("cliente", cliente);
+                intent.putExtra("lista", listaPrecios.getSelectedItem().toString());
+                intent.putExtra("seleccionado", i + 1);
+                intent.putExtra("confirmada", estaConfirmada);
+                startActivityForResult(intent, 1);
+            }
+        });
+    }
+
     private class SaveOrdenPedido extends AsyncTask<Void, Void, Integer>{
         @Override
         protected Integer doInBackground(Void... voids) {
-            return manager.guardarOrdenPedido(cliente, manager.getOrdenPedido(), usuario);
+            if(aModificar){
+                manager.actualizarOrdenPedido(cliente, manager.getOrdenPedido(), usuario);
+
+                return idOP;
+            }else{
+                return manager.guardarOrdenPedido(cliente, manager.getOrdenPedido(), usuario);
+            }
+
         }
 
         @Override
         protected void onPostExecute(Integer result) {
+            String s;
             if(result > 0){
-                Toast.makeText(getApplicationContext(),"El número de orden de pedido es " + result,
-                        Toast.LENGTH_LONG).show();
+                if(aModificar){
+                    s = "La orden de pedido número " + result + " ha sido modificada correctamente";
+                } else {
+                    s= "El número de orden de pedido es " + result;
+                }
+                aModificar = false;
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
                 finish();
             } else {
                 Toast.makeText(getApplicationContext(),"Hubo un problema al intentar grabar la " +
@@ -275,7 +311,23 @@ public class IngresarPedido extends Activity{
             fecha.setText(" " + new SimpleDateFormat("dd/MM/yyyy").format(manager.getOrdenPedido().getFecha()));
             populateProductos();
             setSubtotal();
+            if (orden.getEstado().equals("Confirmada")){
+                disableEverything();
+                estaConfirmada = true;
+            }
         }
+    }
+
+    private void disableEverything(){
+        fecha.setEnabled(false);
+        subtotal.setEnabled(false);
+        direccion.setEnabled(false);
+        divisa.setEnabled(false);
+        listaPrecios.setEnabled(false);
+        ordenCompra.setEnabled(false);
+        buttonAdd.setEnabled(false);
+        buttonSave.setEnabled(false);
+        estados.setEnabled(false);
     }
 
 

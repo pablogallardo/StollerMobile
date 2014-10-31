@@ -11,17 +11,20 @@ import java.sql.DriverManager;
 public class DBConnection {
 
     private static DBConnection instance = null;
-    private static final String URL="jdbc:jtds:sqlserver://10.0.0.107;instance=SQLEXPRESS;" +
+    public static String HOST;
+    public static String USER;
+    public static String PASS;
+    private static String URL="jdbc:jtds:sqlserver://" + HOST + ";instance=SQLEXPRESS;" +
             "databaseName=SOBDD;integratedSecurity=true;";
     //private static final String URL="jdbc:jtds:sqlserver://172.16.185.128:1433/SOBDD;";
     //private static final String URL="jdbc:jtds:sqlserver://192.168.0.103:1433/SOBDD;";
-	private static final String USER="sa";
-	private static final String PASS="asdf1234";
+
 	private static Connection connection = null;
 
 	private DBConnection(){}
 
 	public static DBConnection getInstance(){
+
 		if(instance == null)
 			instance = new DBConnection();
 		return instance;

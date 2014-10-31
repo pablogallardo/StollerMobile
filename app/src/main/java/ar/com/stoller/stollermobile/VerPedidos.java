@@ -33,8 +33,8 @@ public class VerPedidos extends Activity {
 
         Bundle b = getIntent().getExtras();
         cliente = b.getString("clienteseleccionado");
+        setTitle(cliente);
         manager = new VerPedidosManager(cliente);
-        new PopulatePedidos().execute();
         onItemClick();
     }
 
@@ -85,8 +85,9 @@ public class VerPedidos extends Activity {
         }
     }
 
-
-
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new PopulatePedidos().execute();
+    }
 }

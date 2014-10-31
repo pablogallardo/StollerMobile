@@ -23,6 +23,7 @@ public class VerPedidosManager {
 
     public ArrayList<String> getPedidos(){
         ResultSet reset = consulta.getOrdenes(cliente);
+        pedidos.clear();
         try {
             while (reset.next()) {
                 pedidos.add(reset.getString("idordenpedido"));

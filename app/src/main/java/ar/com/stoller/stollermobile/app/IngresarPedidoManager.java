@@ -81,6 +81,10 @@ public class IngresarPedidoManager {
         return consulta.coordinatedInsertOP(cliente, orden, vendedor);
     }
 
+    public boolean actualizarOrdenPedido(String cliente, OrdenPedido orden, String vendedor){
+        return consulta.coordinatedUpdateOP(cliente, orden, vendedor);
+    }
+
     public String getSubtotal(){
         DecimalFormat df = new DecimalFormat("#,###,##0.00");
         return df.format(ordenPedido.getSubTotal());

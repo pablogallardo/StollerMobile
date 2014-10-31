@@ -52,5 +52,6 @@
     <string name="title_activity_ingresar_pedido">IngresarPedido</string>
     <string name="title_activity_ver_pedidos">VerPedidos</string>
     <string name="title_activity_show_pedido">ShowPedido</string>
+    <string name="title_activity_info_cliente">InfoCliente</string>
 
 </resources>

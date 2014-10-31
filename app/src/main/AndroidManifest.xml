@@ -52,6 +52,10 @@
             android:name=".ShowPedido"
             android:label="@string/title_activity_show_pedido" >
         </activity>
+        <activity
+            android:name=".InfoCliente"
+            android:label="@string/title_activity_info_cliente" >
+        </activity>
     </application>
 
 </manifest>

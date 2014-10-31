@@ -24,7 +24,7 @@
                 android:layout_width="1862dp"
                 android:layout_height="93dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/logo_l" />
+                android:src="@drawable/logo_stoller_android" />
 
             <ImageView
                 android:id="@+id/imageView3"
