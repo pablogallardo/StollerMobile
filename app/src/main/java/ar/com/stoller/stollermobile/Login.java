@@ -23,7 +23,7 @@ public class Login extends Activity {
     private Button ingresar;
     private EditText user;
     private EditText pass;
-    private Consultas c;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class Login extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-        c = new Consultas();
+
         ingresar = (Button) findViewById(R.id.sendbtn);
         user = (EditText) findViewById(R.id.useret);
         pass = (EditText) findViewById(R.id.passwdet);
@@ -53,6 +53,8 @@ public class Login extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -73,11 +75,8 @@ public class Login extends Activity {
 
         @Override
         public String doInBackground(String... params) {
-            DBConfiguracion dbconfig = new DBConfiguracion(getApplicationContext());
-            String [] s = dbconfig.getConfiguracion();
-            DBConnection.HOST = s[0];
-            DBConnection.USER = s[1];
-            DBConnection.PASS = s[2];
+            Consultas c = new Consultas(getApplicationContext());
+
             return c.login(params[0], params[1]);
         }
 

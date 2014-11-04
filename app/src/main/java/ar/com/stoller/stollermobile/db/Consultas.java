@@ -1,5 +1,7 @@
 package ar.com.stoller.stollermobile.db;
 
+import android.content.Context;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -29,6 +31,15 @@ public class Consultas {
 	public Consultas(){
         connection = DBConnection.getInstance().getConnection();
 	}
+
+    public Consultas(Context context){
+        DBConfiguracion conf = new DBConfiguracion(context);
+        String [] s = conf.getConfiguracion();
+        DBConnection.HOST = s[0];
+        DBConnection.USER = s[1];
+        DBConnection.PASS = s[2];
+        connection = DBConnection.getInstance().getConnection();
+    }
 
     /**
      * Chequea los datos del loggeo con la BD

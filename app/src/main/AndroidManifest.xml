@@ -8,14 +8,23 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <android:uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Login"
-            android:label="@string/app_name" >
+            android:name="ar.com.stoller.stollermobile.Login"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Holo.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,38 +32,49 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Lobby"
-            android:label="@string/title_activity_lobby" >
+            android:name="ar.com.stoller.stollermobile.Lobby"
+            android:label="@string/title_activity_lobby"
+            android:theme="@android:style/Theme.Holo.Light">
         </activity>
         <activity
-            android:name=".RegistrarStock"
-            android:label="@string/title_activity_registrar_stock" >
+            android:name="ar.com.stoller.stollermobile.RegistrarStock"
+            android:label="@string/title_activity_registrar_stock"
+            android:theme="@android:style/Theme.Holo.Light">
         </activity>
         <activity
-            android:name=".SeleccionarProductoStock"
+            android:name="ar.com.stoller.stollermobile.SeleccionarProductoStock"
             android:label="@string/title_activity_seleccionar_producto"
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
         <activity
-            android:name=".SeleccionarProductoOrdenPedido"
+            android:name="ar.com.stoller.stollermobile.SeleccionarProductoOrdenPedido"
             android:label="@string/title_activity_seleccionar_producto"
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
         <activity
-            android:name=".IngresarPedido"
-            android:label="@string/title_activity_ingresar_pedido" >
+            android:name="ar.com.stoller.stollermobile.IngresarPedido"
+            android:label="@string/title_activity_ingresar_pedido"
+            android:theme="@android:style/Theme.Holo.Light">
         </activity>
         <activity
-            android:name=".VerPedidos"
-            android:label="@string/title_activity_ver_pedidos" >
+            android:name="ar.com.stoller.stollermobile.VerPedidos"
+            android:label="@string/title_activity_ver_pedidos"
+            android:theme="@android:style/Theme.Holo.Light">
         </activity>
         <activity
-            android:name=".ShowPedido"
-            android:label="@string/title_activity_show_pedido" >
+            android:name="ar.com.stoller.stollermobile.ShowPedido"
+            android:label="@string/title_activity_show_pedido"
+            android:theme="@android:style/Theme.Holo.Light">
         </activity>
         <activity
-            android:name=".InfoCliente"
-            android:label="@string/title_activity_info_cliente" >
+            android:name="ar.com.stoller.stollermobile.InfoCliente"
+            android:label="@string/title_activity_info_cliente"
+            android:theme="@android:style/Theme.Holo.Light">
+        </activity>
+        <activity
+            android:name="ar.com.stoller.stollermobile.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@android:style/Theme.Holo.Light">
         </activity>
     </application>
 

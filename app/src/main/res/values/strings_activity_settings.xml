@@ -1,0 +1,19 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">Preferencias de conexion</string>
+
+    <string name="pref_title_sqlserver">Host</string>
+    <string name="pref_default_sqlserver">10.0.0.107</string>
+    <string name="pref_title_user_sqlserver">Usuario</string>
+    <string name="pref_default_user_sqlserver">sa</string>
+    <string name="pref_title_pass_sqlserver">Contraseña</string>
+    <string name="pref_default_pass_sqlserver">asdf1234</string>
+
+
+
+
+</resources>

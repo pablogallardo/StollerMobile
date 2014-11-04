@@ -6,6 +6,7 @@ import android.view.View;
 
 import ar.com.stoller.stollermobile.app.SeleccionarProducto;
 import ar.com.stoller.stollermobile.app.SeleccionarProductoManager;
+import ar.com.stoller.stollermobile.*;
 
 /**
  * Created by gallardp on 30/09/14.

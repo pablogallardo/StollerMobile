@@ -87,8 +87,11 @@ public class SeleccionarProductoOrdenPedido extends SeleccionarProducto{
             direccionaa = new ArrayAdapter<String>(getApplicationContext(),
                     R.layout.pedidos_view, list);
             address.setAdapter(direccionaa);
-            DetalleOrdenPedido d = ordenPedido.getDetalle(seleccionado);
-            address.setSelection(direccionaa.getPosition(d.getDireccionEnvio()));
+            if(seleccionado != 0) {
+                DetalleOrdenPedido d = ordenPedido.getDetalle(seleccionado);
+                address.setSelection(direccionaa.getPosition(d.getDireccionEnvio()));
+            }
+
         }
     }
 

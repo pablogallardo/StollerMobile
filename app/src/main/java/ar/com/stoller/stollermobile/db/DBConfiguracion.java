@@ -30,7 +30,9 @@ public class DBConfiguracion extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i2) {
-
+        String destroydb = "DROP TABLE CONFIG";
+        db.execSQL(destroydb);
+        onCreate(db);
     }
 
     private void addConfiguration(){

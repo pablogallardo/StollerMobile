@@ -16,9 +16,12 @@
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:src="@drawable/logo_stoller_android" />
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:src="@drawable/logo_stoller_android_2"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:layout_weight="1" />
 
     </LinearLayout>
     <RelativeLayout
