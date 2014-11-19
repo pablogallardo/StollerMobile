@@ -174,8 +174,13 @@ public class OrdenPedido implements Serializable{
             if(d.getNroLinea() == nroLinea)return d;
             }
         return null;
-        }
     }
+
+    public boolean detalleVacio(){
+        return detalle.size() == 0;
+    }
+
+}
 
 
 

@@ -56,5 +56,6 @@ public class SeleccionarProductoStock extends SeleccionarProducto {
         findViewById(R.id.precioLayout).setVisibility(View.GONE);
         findViewById(R.id.calendarEnvio).setVisibility(View.GONE);
         findViewById(R.id.sp_address).setVisibility(View.GONE);
+        findViewById(R.id.direccion_envio_tv).setVisibility(View.GONE);
     }
 }

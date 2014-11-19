@@ -13,8 +13,8 @@
     <string name="month">Mes</string>
     <string name="year">Año</string>
     <string name="add">Agregar Producto</string>
-    <string name="pick_quantity">Elija la Cantidad:</string>
-    <string name="address">Dirección:</string>
+    <string name="pick_quantity">Cantidad:</string>
+    <string name="address">Dirección Facturación:</string>
     <string name="date">Fecha:</string>
     <string name="currency">Divisa:</string>
     <string name="order">Orden de compra:</string>

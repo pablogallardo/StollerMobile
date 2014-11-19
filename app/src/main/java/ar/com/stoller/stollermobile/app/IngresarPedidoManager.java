@@ -107,4 +107,9 @@ public class IngresarPedidoManager {
     public void setOrdenPedido(int idOP){
         ordenPedido = consulta.getOrdenPedido(idOP);
     }
+
+    public boolean ordenVacia(){
+        return ordenPedido.detalleVacio();
+    }
+
 }

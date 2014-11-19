@@ -11,10 +11,12 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import ar.com.stoller.stollermobile.app.SeleccionarProducto;
 import ar.com.stoller.stollermobile.app.SeleccionarProductoManager;
@@ -61,19 +63,26 @@ public class SeleccionarProductoOrdenPedido extends SeleccionarProducto{
 
     @Override
     protected void okPress() {
-        if(seleccionado == 0){
-            ordenPedido.agregarDetalle(producto.getText().toString(), Float.parseFloat(precio.getText().toString().replace(',','.')),
-                    Integer.parseInt(cantidad.getText().toString()), new Date(calendarEnvio.getDate()), ordenPedido.getArrayDetalles().size() + 1,
-                    address.getSelectedItem().toString());
+
+        if(checkCalendar()){
+            if(seleccionado == 0){
+                ordenPedido.agregarDetalle(producto.getText().toString(), Float.parseFloat(precio.getText().toString().replace(',','.')),
+                        Integer.parseInt(cantidad.getText().toString()), new Date(calendarEnvio.getDate()), ordenPedido.getArrayDetalles().size() + 1,
+                        address.getSelectedItem().toString());
             } else {
-            ordenPedido.modificarDetalle(producto.getText().toString(), Float.parseFloat(precio.getText().toString().replace(',','.')),
-                    Integer.parseInt(cantidad.getText().toString()), new Date(calendarEnvio.getDate()), seleccionado,
-                    address.getSelectedItem().toString());
+                ordenPedido.modificarDetalle(producto.getText().toString(), Float.parseFloat(precio.getText().toString().replace(',','.')),
+                        Integer.parseInt(cantidad.getText().toString()), new Date(calendarEnvio.getDate()), seleccionado,
+                        address.getSelectedItem().toString());
+            }
+            Intent data = new Intent();
+            data.putExtra("data", ordenPedido);
+            setResult(Activity.RESULT_OK, data);
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, "Por favor, Ingrese una fecha válida.",
+                    Toast.LENGTH_LONG).show();
         }
-        Intent data = new Intent();
-        data.putExtra("data", ordenPedido);
-        setResult(Activity.RESULT_OK, data);
-        super.onBackPressed();
+
     }
 
     private class PopulateDireccion extends AsyncTask<String, Void, ArrayList<String>> {
@@ -103,6 +112,15 @@ public class SeleccionarProductoOrdenPedido extends SeleccionarProducto{
         address.setEnabled(false);
         precio.setEnabled(false);
     }
+
+    private boolean checkCalendar(){
+        if(calendarEnvio.getDate() > Calendar.getInstance().getTimeInMillis()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 
 }

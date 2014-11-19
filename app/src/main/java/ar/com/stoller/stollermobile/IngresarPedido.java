@@ -116,6 +116,7 @@ public class IngresarPedido extends Activity{
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 OrdenPedido op = manager.getOrdenPedido();
                 op.setDireccionFacturacion(direccion.getSelectedItem().toString());
                 op.setDivisa("USD");
@@ -127,7 +128,12 @@ public class IngresarPedido extends Activity{
                 } else {
                     op.setCreadoPor(usuario);
                 }
-                new SaveOrdenPedido().execute();
+                if(!op.detalleVacio()) {
+                    new SaveOrdenPedido().execute();
+                } else {
+                    Toast.makeText(getApplicationContext(),"Por favor, ingrese productos antes de " +
+                            "guardar", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

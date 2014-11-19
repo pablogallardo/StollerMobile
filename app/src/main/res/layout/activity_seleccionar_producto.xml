@@ -73,6 +73,13 @@
             android:gravity="center_horizontal" />
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dirección Envío:"
+        android:id="@+id/direccion_envio_tv"
+        android:textColor="@color/blue" />
+
     <Spinner
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
